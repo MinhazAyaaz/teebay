@@ -15,8 +15,8 @@ const Signup = () => {
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
     <Container fluid w={500} className="p-10 rounded-lg">
-      <Title ta="center">
-        Sazim Test App
+      <Title ta="center" className="text-2xl font-bold font-mono text-gray-700">
+        TEEBAY
       </Title>
 
       <Text ta="center" mt={10} size="sm">

@@ -23,7 +23,7 @@ const Navbar = () => {
             to="/"
             className="font-bold font-mono text-[20px] text-gray-700 no-underline"
           >
-            Sazim Test App
+            Teebay
           </Link>
 
           <nav
@@ -50,7 +50,7 @@ const Navbar = () => {
             })}
           </nav>
 
-          <div className="flex items-center gap-2 ml-20">
+          <div className="flex items-center gap-2 ">
             <Link
               to="/login"
               onClick={() => {
