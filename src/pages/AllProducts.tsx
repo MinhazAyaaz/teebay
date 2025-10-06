@@ -36,7 +36,11 @@ const AllProducts = () => {
       <ScrollArea h={690} className="w-full max-w-6xl">
         <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 px-2 sm:px-4">
           {MY_MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              type="all-products"
+            />
           ))}
         </div>
       </ScrollArea>
