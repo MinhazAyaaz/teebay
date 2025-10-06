@@ -4,7 +4,7 @@ import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import ProductCardSkeleton from "../components/skeletons/ProductCardSkeleton";
+import ProductCardLoader from "../components/ProductCardLoader";
 
 const MyProducts = () => {
   const [search, setSearch] = useState("");
@@ -40,7 +40,7 @@ const MyProducts = () => {
       </div>
       <ScrollArea h={690} className="w-full max-w-6xl" scrollbars="y">
         {loading ? (
-          <ProductCardSkeleton />
+          <ProductCardLoader />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 px-2 sm:px-4">
           {MY_MOCK_PRODUCTS.map((product) => (
