@@ -1,21 +1,43 @@
-import { Button, ScrollArea } from "@mantine/core"
-import { MY_MOCK_PRODUCTS } from "../constants"
-import ProductCard from "../components/ProductCard"
+import { Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  return (
-    <div className="h-screen w-full flex flex-col items-center justify-start gap-4 sm:gap-6 p-4 sm:p-6">
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-700">My Products</h1>
-      <ScrollArea h={700} className="w-full max-w-6xl">
-        <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 px-2 sm:px-4">
-          {MY_MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </ScrollArea>
-      <Button onClick={() => {}} color="black" radius="md" className="w-full sm:w-auto">Add Product</Button>
-    </div>
-  )
-}
+  const navigate = useNavigate();
 
-export default Home
+  return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center gap-4">
+      <h1 className="text-5xl font-bold font-mono text-gray-700">
+        SAZIM TEST APP
+      </h1>
+      <h1 className="text-md font-bold font-mono text-gray-700">
+        Please select an option to continue.
+      </h1>
+      <div className="flex flex-row gap-8">
+      <Button
+        radius="md"
+        color="blue"
+        variant="outline"
+        onClick={() => {
+          navigate("/my-products");
+        }}
+        className="text-xl font-bold font-mono text-gray-700 hover:bg-gray-700 duration-200"
+      >
+        My Products
+      </Button>
+      <Button
+        radius="md"
+        color="blue"
+        variant="outline"
+        onClick={() => {
+            navigate("/all-products");
+        }}
+        className="text-xl font-bold font-mono text-gray-700 hover:bg-gray-700 duration-200"
+      >
+          All Products
+        </Button>
+       </div>
+    </div>
+  );
+};
+
+export default Home;
