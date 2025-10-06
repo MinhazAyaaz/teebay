@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { LINKS } from "../constants";
+import { useDisclosure } from "@mantine/hooks";
+import { Burger } from "@mantine/core";
 
 const Navbar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [opened, { toggle }] = useDisclosure();
 
   const shouldRender = useMemo(() => {
     const url = window.location.pathname;
@@ -26,45 +28,41 @@ const Navbar = () => {
           <nav
             className={
               `items-center gap-1 ` +
-              (mobileOpen
+              (opened
                 ? `flex absolute top-14 left-0 right-0 bg-white border-b border-gray-200 p-2 sm:static sm:flex sm:bg-transparent sm:border-0 sm:p-0`
                 : `hidden sm:flex`)
             }
           >
             {LINKS.map((link) => {
               return (
-                <a
+                <Link
                   key={link.label}
-                  href={link.link}
+                  to={link.link}
                   className="inline-block leading-none px-3 py-2 rounded-md  text-gray-700 text-sm font-medium hover:bg-gray-200 duration-200"
-                  onClick={(e) => e.preventDefault()}
                 >
                   {link.label}
-                </a>
+                </Link>
               );
             })}
           </nav>
 
           <div className="flex items-center gap-2 ml-20">
-            <a
-              href="/login"
+            <Link
+              to="/login"
               onClick={() => {
                 localStorage.removeItem("token");
               }}
               className="inline-block leading-none px-3 py-2 rounded-md  text-gray-700 text-sm font-medium bg-gray-200 hover:bg-gray-300 duration-200"
             >
               Logout
-            </a>
-            <button
-              className="inline-flex flex-col justify-center gap-1 w-9 h-9 border border-transparent bg-transparent rounded-md cursor-pointer hover:bg-gray-100 sm:hidden"
+            </Link>
+            <Burger
+              opened={opened}
+              onClick={toggle}
               aria-label="Toggle navigation"
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((v) => !v)}
-            >
-              <span className="block w-[18px] h-[2px] bg-gray-900 mx-auto" />
-              <span className="block w-[18px] h-[2px] bg-gray-900 mx-auto" />
-              <span className="block w-[18px] h-[2px] bg-gray-900 mx-auto" />
-            </button>
+              className="inline-flex flex-col justify-center gap-1 w-9 h-9 border border-transparent bg-transparent rounded-md cursor-pointer hover:bg-gray-100 sm:hidden"
+            />
+            
           </div>
         </div>
       </div>
