@@ -1,8 +1,9 @@
 import type { LinkItem, Product } from "../types";
+import { BoxIcon, PackageIcon } from "lucide-react";
 
 export const LINKS: LinkItem[] = [
-  { link: "/all-products", label: "All Products" },
-  { link: "/my-products", label: "My Products" },
+  { link: "/all-products", label: "All Products", icon: BoxIcon },
+  { link: "/my-products", label: "My Products", icon: PackageIcon },
 ];
 
 export const MY_MOCK_PRODUCTS: Product[] = [

@@ -1,16 +1,17 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { LINKS } from "../constants";
 import { useDisclosure } from "@mantine/hooks";
 import { Burger } from "@mantine/core";
 
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure();
+  const location = useLocation();
 
   const shouldRender = useMemo(() => {
-    const url = window.location.pathname;
+    const url = location.pathname;
     return !(url === "/login" || url === "/signup");
-  }, []);
+  }, [location.pathname]);
 
   if (!shouldRender) return null;
 
@@ -34,14 +35,17 @@ const Navbar = () => {
             }
           >
             {LINKS.map((link) => {
+              const Icon = link.icon;
               return (
-                <Link
+                <NavLink
                   key={link.label}
                   to={link.link}
-                  className="inline-block leading-none px-3 py-2 rounded-md  text-gray-700 text-sm font-medium hover:bg-gray-200 duration-200"
+                  className={({ isActive }) =>
+                    `flex flex-row items-center gap-2 leading-none px-3 py-2 rounded-md text-gray-700 text-sm font-medium hover:bg-gray-200 duration-200 ${isActive ? "underline underline-offset-8" : ""}`
+                  }
                 >
-                  {link.label}
-                </Link>
+                  <Icon className="w-4 h-4" /> {link.label}
+                </NavLink>
               );
             })}
           </nav>
