@@ -8,6 +8,7 @@ import MyProducts from "./pages/MyProducts";
 import AllProducts from "./pages/AllProducts";
 import AddProduct from "./pages/AddProduct";
 import SingleProduct from "./pages/SingleProduct";
+import History from "./pages/History";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/my-products/:id" element={<SingleProduct />} />
           <Route path="/all-products/:id" element={<SingleProduct />} />
+          <Route path="/history" element={<History />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>

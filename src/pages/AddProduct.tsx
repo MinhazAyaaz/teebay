@@ -28,7 +28,7 @@ const AddProduct = () => {
         <h1 className="text-xl sm:text-2xl font-bold text-gray-700 text-center">
           Add Product
         </h1>
-        <Progress value={step * 20} animated color="blue" w={500} />
+        <Progress value={step * 20} animated color="gray" w={500} />
         <h1 className="text-sm text-gray-500">Step {step} of 5</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           {step === 1 && (

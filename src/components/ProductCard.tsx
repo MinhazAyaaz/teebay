@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 type ProductCardProps = {
   product: Product;
   type: "my-products" | "all-products";
+  hover?: boolean;
 };
 
-const ProductCard = ({ product, type }: ProductCardProps) => {
+const ProductCard = ({ product, type, hover = true }: ProductCardProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
@@ -27,9 +28,11 @@ const ProductCard = ({ product, type }: ProductCardProps) => {
     <>
       <div
         onClick={() => {
-          navigate(`/${type}/${product.id}`);
+          if (hover) {
+            navigate(`/${type}/${product.id}`);
+          }
         }}
-        className="w-full max-w-4xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-44 bg-white rounded-md py-4 px-4 sm:py-6 sm:px-8 md:px-12 border border-black flex flex-col gap-2 hover:shadow-md duration-200 cursor-pointer hover:bg-gray-50"
+        className={`w-full max-w-4xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-44 bg-white rounded-md py-4 px-4 sm:py-6 sm:px-8 md:px-12 border border-black flex flex-col gap-2 ${hover ? "hover:bg-gray-50 cursor-pointer hover:shadow-md duration-200" : ""}`}
       >
         <div className="flex justify-between">
           <h1 className="text-base sm:text-lg font-bold">{product.name}</h1>
