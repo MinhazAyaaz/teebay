@@ -30,7 +30,7 @@ const ProductCard = ({ product, type }: ProductCardProps) => {
       }} className="w-full max-w-4xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-44 bg-white rounded-md py-4 px-4 sm:py-6 sm:px-8 md:px-12 border-1 border-gray-200 flex flex-col gap-2 hover:shadow-md duration-200 cursor-pointer hover:bg-gray-50">
         <div className="flex justify-between">
           <h1 className="text-base sm:text-lg font-bold">{product.name}</h1>
-          <span
+          {type === "my-products" && <span
             className="flex items-center justify-center w-7 h-7 bg-red-100 rounded-full hover:bg-red-200 duration-200 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
@@ -38,7 +38,7 @@ const ProductCard = ({ product, type }: ProductCardProps) => {
             }}
           >
             <Trash2 className="w-3.5 h-3.5 cursor-pointer text-red-500" />
-          </span>
+          </span>}
         </div>
         <h1 className="text-xs sm:text-sm text-gray-500">
           Categories: {product.categories.join(",")}
