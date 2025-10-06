@@ -23,9 +23,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <>
-      <div className="w-[800px] min-h-44 bg-white rounded-md py-6 px-12 border-1 border-gray-200 flex flex-col gap-2 hover:shadow-md duration-200 cursor-pointer hover:bg-gray-50">
+      <div className="w-full max-w-4xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl min-h-44 bg-white rounded-md py-4 px-4 sm:py-6 sm:px-8 md:px-12 border-1 border-gray-200 flex flex-col gap-2 hover:shadow-md duration-200 cursor-pointer hover:bg-gray-50">
         <div className="flex justify-between">
-          <h1 className="text-lg font-bold">{product.name}</h1>
+          <h1 className="text-base sm:text-lg font-bold">{product.name}</h1>
           <span
             className="flex items-center justify-center w-7 h-7 bg-red-100 rounded-full hover:bg-red-200 duration-200 cursor-pointer"
             onClick={open}
@@ -33,18 +33,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Trash2 className="w-3.5 h-3.5 cursor-pointer text-red-500" />
           </span>
         </div>
-        <h1 className="text-sm text-gray-500">
+        <h1 className="text-xs sm:text-sm text-gray-500">
           Categories: {product.categories.join(",")}
         </h1>
-        <h1 className="text-sm text-gray-500">
+        <h1 className="text-xs sm:text-sm text-gray-500">
           Price: ${product.price} | Rent: ${product.rent} daily
         </h1>
-        <h1 className="text-sm">{product.description}</h1>
+        <h1 className="text-xs sm:text-sm">{product.description}</h1>
         <div className="flex justify-between mt-4">
-          <h1 className="text-sm text-gray-500">
+          <h1 className="text-xs sm:text-sm text-gray-500">
             Date posted: {formatDateWithOrdinal(product.createdAt)}
           </h1>
-          <h1 className="text-sm text-gray-500">{product.views} views</h1>
+          <h1 className="text-xs sm:text-sm text-gray-500">{product.views} views</h1>
         </div>
       </div>
       <Modal opened={opened} onClose={close} title="Delete Product" centered>
