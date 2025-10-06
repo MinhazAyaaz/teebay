@@ -1,6 +1,64 @@
-import type { LinkItem } from "../types";
+import type { LinkItem, Product } from "../types";
 
 export const LINKS: LinkItem[] = [
   { link: "/all-products", label: "All Products" },
   { link: "/my-products", label: "My Products" },
+];
+
+export const MY_MOCK_PRODUCTS: Product[] = [
+  {
+    id: 1,
+    name: "Product 1",
+    price: 100,
+    categories: ["Category 1"], 
+    description: "Description 1",
+    rent: "100",
+    views: 100,
+    createdAt: "2021-01-01T00:00:00.000Z",
+    updatedAt: "2021-01-01T00:00:00.000Z",
+  },
+  {
+    id: 2,
+    name: "Product 2",
+    price: 200,
+    categories: ["Category 2"],
+    description: "Description 2",
+    rent: "200",
+    views: 200,
+    createdAt: "2021-01-01T00:00:00.000Z",
+    updatedAt: "2021-01-01T00:00:00.000Z",
+  },
+  {
+    id: 3,
+    name: "Product 3",
+    price: 300,
+    categories: ["Category 3"],
+    description: "Description 3",
+    rent: "300",
+    views: 300,
+    createdAt: "2021-01-01T00:00:00.000Z",
+    updatedAt: "2021-01-01T00:00:00.000Z",
+  },
+  {
+    id: 4,
+    name: "Product 4",
+    price: 400,
+    categories: ["Category 4"],
+    description: "Description 4",
+    rent: "400",
+    views: 400,
+    createdAt: "2021-01-01T00:00:00.000Z",
+    updatedAt: "2021-01-01T00:00:00.000Z",
+  },
+  {
+    id: 5,
+    name: "Product 5",
+    price: 500,
+    categories: ["Category 5"],
+    description: "Description 5",
+    rent: "500",
+    views: 500,
+    createdAt: "2021-01-01T00:00:00.000Z",
+    updatedAt: "2021-01-01T00:00:00.000Z",
+  },
 ];
