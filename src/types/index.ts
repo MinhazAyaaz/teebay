@@ -10,6 +10,7 @@ export type Product = {
   categories: string[];
   description: string;
   rent: string;
+  interval: string; // e.g., "Hourly", "Daily", "Weekly", "Monthly", "Yearly"
   price: number;
   views: number;
   createdAt: string;
