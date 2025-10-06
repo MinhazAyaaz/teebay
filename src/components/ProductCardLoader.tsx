@@ -1,6 +1,6 @@
 import { Skeleton } from "@mantine/core";
 
-const ProductCardSkeleton = () => {
+const ProductCardLoader = () => {
   return (
     <div className="w-full justify-center items-center min-h-60 rounded-md py-4 px-4 sm:py-6 sm:px-8 md:px-12 mx-4 flex flex-col gap-6 sm:gap-10 hover:shadow-md duration-200">
       {[1,2,3].map(() => (
@@ -20,4 +20,4 @@ const ProductCardSkeleton = () => {
   );
 };
 
-export default ProductCardSkeleton;
+export default ProductCardLoader;
