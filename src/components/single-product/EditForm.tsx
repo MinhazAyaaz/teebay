@@ -36,13 +36,12 @@ const EditForm = ({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <TextInput radius="md" placeholder="Product name" value={name} onChange={(e) => setName(e.target.value)} label="Title" w={500}/>
+        <TextInput radius="md" placeholder="Product name" value={name} onChange={(e) => setName(e.target.value)} label="Title"/>
         <MultiSelect
           label="Categories"
           radius="md"
           placeholder="Categories (comma separated)"
           data={["Category 1", "Category 2", "Category 3"]}
-          w={500}
           value={categories}
           onChange={(values) => setCategories(values)}
         />

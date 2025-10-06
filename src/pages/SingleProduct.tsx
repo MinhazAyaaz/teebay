@@ -1,4 +1,4 @@
-import { Button, ScrollArea } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { MY_MOCK_PRODUCTS } from "../constants";
@@ -75,6 +75,11 @@ const SingleProduct = () => {
     setIsEditing(false);
   };
 
+  const handleDelete = () => {
+    setProduct(null);
+    setIsEditing(false);
+  };
+
   if (loading) {
     return <SingleProductLoading />;
   }
@@ -90,9 +95,9 @@ const SingleProduct = () => {
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-start gap-4 sm:gap-6 p-4 sm:p-6">
-      <SingleProductHeader onBack={() => navigate(-1)} canEdit={isMyProduct} isEditing={isEditing} onStartEdit={handleStartEdit} />
+      <SingleProductHeader onBack={() => navigate(-1)} canEdit={isMyProduct} isEditing={isEditing} onStartEdit={handleStartEdit} onDelete={handleDelete} />
 
-      <ScrollArea mah={690} className="w-full max-w-5xl" scrollbars="y">
+      <div className="w-full max-w-5xl overflow-y-auto">
         <div className="w-full rounded-md py-6 px-6 sm:px-8 md:px-1 flex flex-col gap-6">
           {!isEditing ? (
             <ReadOnly product={product} />
@@ -115,7 +120,7 @@ const SingleProduct = () => {
             />
           )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };
