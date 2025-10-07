@@ -18,8 +18,6 @@ const ProductCard = ({ product, type, hover = true, refetch }: ProductCardProps)
   const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
 
-  console.log(product);
-
   return (
     <>
       <div

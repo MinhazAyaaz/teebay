@@ -1,43 +1,49 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_ALL_PRODUCTS = gql`
-  query GetAllProducts {
-    getAllProducts {
-      id
-      title
-      description
-      condition
-      categories {
-        category
+  query GetAllProducts($pageSize: Int!, $page: Int!, $search: String) {
+    getAllProducts(pageSize: $pageSize, page: $page, search: $search) {
+      products {
+        id
+        title
+        description
+        condition
+        categories {
+          category
+        }
+        rentPrice
+        rentInterval
+        salePrice
+        status
+        currency
+        ownerId
+        createdAt
       }
-      rentPrice
-      rentInterval
-      salePrice
-      status
-      currency
-      ownerId
-      createdAt
+      totalCount
     }
   }
 `;
 
 export const QUERY_USER_PRODUCTS = gql`
-  query GetUserProducts {
-    getUserProducts {
-      id
-      title
-      description
-      condition
-      categories {
-        category
+  query GetUserProducts($pageSize: Int!, $page: Int!, $search: String) {
+    getUserProducts(pageSize: $pageSize, page: $page, search: $search) {
+      products {
+        id
+        title
+        description
+        condition
+        categories {
+          category
+        }
+        rentPrice
+        rentInterval
+        salePrice
+        status
+        currency
+        ownerId
+        createdAt
       }
-      rentPrice
-      rentInterval
-      salePrice
-      status
-      currency
-      ownerId
-      createdAt
+      totalCount
     }
   }
 `;
@@ -54,7 +60,7 @@ export const QUERY_PRODUCT_BY_ID = gql`
       }
       rentPrice
       rentInterval
-      salePrice 
+      salePrice
       status
       currency
       ownerId

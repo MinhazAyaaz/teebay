@@ -12,29 +12,29 @@ import ProductNotFound from "../components/ProductNotFound";
 const MyProducts = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [productData, setProductData] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
-  const pageSize = 10;
-
+  const pageSize = 5;
+ 
   const { data, loading, refetch } = useQuery<MyProductQuery, MyProductsVars>(
     QUERY_USER_PRODUCTS,
     {
-      variables: { search: "", page: 1, pageSize },
+      variables: { search: search, page: page, pageSize: pageSize },
       fetchPolicy: "cache-and-network",
       notifyOnNetworkStatusChange: true,
     }
   );
-
+ 
   useEffect(() => {
-    if (data && Array.isArray(data.getUserProducts)) {
-      setProducts(data.getUserProducts);
-      setTotal(data.getUserProducts.length);
+    if (data && Array.isArray(data.getUserProducts.products)) {
+      setProductData(data.getUserProducts.products);
+      setTotal(data.getUserProducts.totalCount);
     }
   }, [data]);
 
   useEffect(() => {
     const id = setTimeout(() => {
-      refetch({ search, page, pageSize });
+      refetch({ search, page: page, pageSize: pageSize });
     }, 300);
     return () => clearTimeout(id);
   }, [search, page, pageSize, refetch]);
@@ -62,12 +62,12 @@ const MyProducts = () => {
         </div>
       </div>
       <ScrollArea mah={690} className="w-full max-w-6xl" scrollbars="y">
-        {!loading && products.length === 0 && <ProductNotFound />}
-        {loading && products.length === 0 ? (
+        {!loading && productData.length === 0 && <ProductNotFound />} 
+        {loading && productData.length === 0 ? (
           <ProductCardLoader />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 px-2 sm:px-4">
-            {products?.map((product: Product) => (
+            {productData?.map((product: Product) => (
               <ProductCard
                 key={product.id}
                 product={product}

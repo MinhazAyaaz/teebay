@@ -34,23 +34,29 @@ export type Product = {
 };
 
 export type MyProductQuery = {
-  getUserProducts: Product[];
+  getUserProducts: {
+    products: Product[];
+    totalCount: number;
+  };
 };
 
 export type MyProductsVars = {
   search?: string;
-  page?: number;
-  pageSize?: number;
+  page: number;
+  pageSize: number;
 };
 
 export type AllProductQuery = {
-  getAllProducts: Product[];
+  getAllProducts: {
+    products: Product[];
+    totalCount: number;
+  };
 };
 
 export type AllProductsVars = {
   search?: string;
-  page?: number;
-  pageSize?: number;
+  page: number;
+  pageSize: number;
 };
 
 export type ProductQuery = {
