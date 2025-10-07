@@ -24,8 +24,6 @@ const AllProducts = () => {
     }
   );
 
-  console.log(data);
-
   useEffect(() => {
     if (data && Array.isArray(data.getAllProducts.products)) {
       setProductData(data.getAllProducts.products);
