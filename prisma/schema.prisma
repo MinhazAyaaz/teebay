@@ -23,6 +23,14 @@ enum Category {
   TOYS
 }
 
+enum RentInterval {
+  HOURLY
+  DAILY
+  WEEKLY
+  MONTLY
+  YEARLY
+}
+
 enum ProductStatus {
   AVAILABLE
   SOLD
@@ -73,7 +81,8 @@ model Product {
   condition          Condition        @default(GOOD)
   status             ProductStatus    @default(AVAILABLE)
   salePrice          Decimal?         @db.Decimal(12,2)
-  rentPricePerDay    Decimal?         @db.Decimal(12,2)
+  rentPrice          Decimal?         @db.Decimal(12,2)
+  rentInterval       RentInterval?    @default(DAILY)
   currency           String           @default("BDT")
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt

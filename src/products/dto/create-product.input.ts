@@ -1,5 +1,6 @@
 import { Field, Float, InputType } from "@nestjs/graphql";
-import { Condition, Category } from "@prisma/client";
+import { Condition, Category, RentInterval } from "@prisma/client";
+
 import {
   IsArray,
   IsEnum,
@@ -33,7 +34,12 @@ export class CreateProductInput {
 
   @Field(() => Float, { nullable: true })
   @IsOptional()
-  rentPricePerDay?: number;
+  rentPrice?: number;
+
+  @Field(() => RentInterval, { nullable: true })
+  @IsOptional()
+  @IsEnum(RentInterval)
+  rentInterval?: RentInterval;
 
   @Field(() => [Category])
   @IsArray()

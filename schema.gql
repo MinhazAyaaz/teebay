@@ -22,7 +22,8 @@ input CreateProductInput {
   categories: [Category!]!
   condition: Condition
   description: String
-  rentPricePerDay: Float
+  rentInterval: RentInterval
+  rentPrice: Float
   salePrice: Float
   title: String!
 }
@@ -108,7 +109,8 @@ type ProductModel {
   description: String
   id: ID!
   ownerId: String!
-  rentPricePerDay: Float
+  rentInterval: RentInterval
+  rentPrice: Float
   salePrice: Float
   status: ProductStatus!
   title: String!
@@ -138,12 +140,21 @@ type Query {
   test: String!
 }
 
+enum RentInterval {
+  DAILY
+  HOURLY
+  MONTLY
+  WEEKLY
+  YEARLY
+}
+
 input UpdateProductInput {
   categories: [Category!]
   condition: Condition
   description: String
   id: ID!
-  rentPricePerDay: Float
+  rentInterval: RentInterval
+  rentPrice: Float
   salePrice: Float
   title: String
 }

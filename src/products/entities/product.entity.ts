@@ -6,11 +6,12 @@ import {
   registerEnumType,
 } from "@nestjs/graphql";
 import { ProductCategoryModel } from "./product-category.entity";
-import { Condition, ProductStatus } from "@prisma/client";
+import { Condition, ProductStatus, RentInterval } from "@prisma/client";
 
 
 registerEnumType(ProductStatus, { name: "ProductStatus" });
 registerEnumType(Condition, { name: "Condition" });
+registerEnumType(RentInterval, { name: "RentInterval" });
 
 @ObjectType()
 export class ProductModel {
@@ -33,7 +34,10 @@ export class ProductModel {
   salePrice?: number;
 
   @Field(() => Float, { nullable: true })
-  rentPricePerDay?: number;
+  rentPrice?: number;
+
+  @Field(() => RentInterval, { nullable: true })
+  rentInterval?: RentInterval;
 
   @Field()
   currency: string;

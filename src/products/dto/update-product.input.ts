@@ -1,5 +1,5 @@
 import { Field, Float, ID, InputType } from "@nestjs/graphql";
-import { Condition, Category } from "@prisma/client";
+import { Condition, Category, RentInterval } from "@prisma/client";
 import { IsArray, IsEnum, IsOptional, IsString } from "class-validator";
 
 @InputType()
@@ -27,7 +27,12 @@ export class UpdateProductInput {
 
   @Field(() => Float, { nullable: true })
   @IsOptional()
-  rentPricePerDay?: number;
+  rentPrice?: number;
+
+  @Field(() => RentInterval, { nullable: true })
+  @IsOptional()
+  @IsEnum(RentInterval)
+  rentInterval?: RentInterval;
 
   @Field(() => [Category], { nullable: true })
   @IsOptional()

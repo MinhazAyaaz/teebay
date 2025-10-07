@@ -125,11 +125,11 @@ export class OrdersService {
         if (product.status === ProductStatus.SOLD) {
           throw new BadRequestException("Product is sold");
         }
-        if (!product.rentPricePerDay) {
+        if (!product.rentPrice) {
           throw new BadRequestException("Rent price not set");
         }
         const days = Math.max(1, differenceInCalendarDays(end, start));
-        const amount = product.rentPricePerDay.toNumber() * days;
+        const amount = product.rentPrice.toNumber() * days;
 
         // DB-level exclusion constraint (add via migration) prevents overlaps
         const order = await tx.order.create({

@@ -40,7 +40,8 @@ export class ProductsService {
           description: input.description,
           condition: input.condition ?? "GOOD",
           salePrice: input.salePrice ?? null,
-          rentPricePerDay: input.rentPricePerDay ?? null,
+          rentPrice: input.rentPrice ?? null,
+          rentInterval: input.rentInterval ?? undefined,
           categories: {
             create: input.categories.map((c) => ({ category: c })),
           },
@@ -89,7 +90,8 @@ export class ProductsService {
           description: input.description ?? undefined,
           condition: input.condition ?? undefined,
           salePrice: input.salePrice ?? undefined,
-          rentPricePerDay: input.rentPricePerDay ?? undefined,
+          rentPrice: input.rentPrice ?? undefined,
+          rentInterval: input.rentInterval ?? undefined,
         },
       });
 
