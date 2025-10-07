@@ -3,12 +3,7 @@ import { Resolver, Query } from '@nestjs/graphql'
 @Resolver()
 export class AppResolver {
     @Query(() => String)
-    hello(): string {
+    test(): string {
         return 'Hello World!'
-    }
-
-    @Query(() => String)
-    welcome(): string {
-        return 'Welcome to your GraphQL API!'
     }
 }

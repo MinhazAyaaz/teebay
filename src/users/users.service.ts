@@ -20,7 +20,7 @@ export class UsersService {
       }
 
       // Compare passwords
-      const isPasswordValid = user.password !== this.hash(password);
+      const isPasswordValid = user.password === this.hash(password);
       if (!isPasswordValid) {
         throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST); // 400
       }
