@@ -7,7 +7,7 @@ const httpLink = new HttpLink({
   fetchOptions: { mode: 'cors' },
 });
 
-const authLink = new SetContextLink((prevContext, operation) => {
+const authLink = new SetContextLink((prevContext, _operation) => {
   let userId: string | null = null;
   try {
     if (typeof window !== 'undefined') {
