@@ -11,5 +11,5 @@ Didn't get enough time to be able to run codegen, so that I could get the backen
 # Time Constraint
 Time was a bit of a constraint as it was hard to complete a full-stack project alongside my current full-time job, but I believe I did most of what was asked according to the requirements.
 
-# No Validation while creating product and clicking next step
+# Field Validation while creating product and clicking next step
 This would have required some time to implement as I wanted to validate the fields everytime a user clicked Next, to make sure the User cannot go to the next step before entering the values
