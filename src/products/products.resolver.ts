@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context, Int } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
 import { ProductModel } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
@@ -13,14 +13,24 @@ export class ProductsResolver {
 
   @Query(() => [ProductModel]) 
   @UseGuards(GqlAuthGuard)
-  getAllProducts(@Context() ctx: any) {
-    return this.productsService.listAllProducts(ctx.userId);
+  getAllProducts(
+    @Context() ctx: any,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 10 }) pageSize: number,
+    @Args('search', { type: () => String, nullable: true }) search?: string,
+  ) {
+    return this.productsService.listAllProducts(ctx.userId, { page, pageSize, search });
   }
 
   @Query(() => [ProductModel])
   @UseGuards(GqlAuthGuard)
-  getUserProducts(@Context() ctx: any) {
-    return this.productsService.listUserProducts(ctx.userId);
+  getUserProducts(
+    @Context() ctx: any,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 10 }) pageSize: number,
+    @Args('search', { type: () => String, nullable: true }) search?: string,
+  ) {
+    return this.productsService.listUserProducts(ctx.userId, { page, pageSize, search });
   }
 
   @Query(() => ProductModel)

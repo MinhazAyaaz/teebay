@@ -8,19 +8,73 @@ import { ProductStatus } from "@prisma/client";
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async listAllProducts(ownerId: string) {
+  async listAllProducts(
+    ownerId: string,
+    opts: { page: number; pageSize: number; search?: string } 
+  ) {
+    const page = Math.max(1, opts.page);
+    const limit = Math.max(1, Math.min(10, opts.pageSize));
+    const skip = (page - 1) * limit;
+
+    const where = {
+      status: ProductStatus.AVAILABLE,
+      NOT: { ownerId: ownerId },
+      ...(opts.search
+        ? {
+            OR: [
+              { title: { contains: opts.search, mode: "insensitive" as const } },
+              {
+                description: {
+                  contains: opts.search,
+                  mode: "insensitive" as const,
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
     return this.prisma.product.findMany({
-      where: { status: ProductStatus.AVAILABLE, NOT: { ownerId: ownerId } },
+      where,
       include: { categories: true },
       orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
     });
   }
 
-  async listUserProducts(ownerId: string) {
+  async listUserProducts(
+    ownerId: string,
+    opts: { page: number; pageSize: number; search?: string }
+  ) {
+    const page = Math.max(1, opts.page);
+    const limit = Math.max(1, Math.min(10, opts.pageSize));
+    const skip = (page - 1) * limit;
+
+    const where = {
+      status: ProductStatus.AVAILABLE,
+      ownerId: ownerId,
+      ...(opts.search
+        ? {
+            OR: [
+              { title: { contains: opts.search, mode: "insensitive" as const } },
+              {
+                description: {
+                  contains: opts.search,
+                  mode: "insensitive" as const,
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
     return this.prisma.product.findMany({
-      where: { status: ProductStatus.AVAILABLE, ownerId: ownerId },
+      where,
       include: { categories: true },
       orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
     });
   }
 

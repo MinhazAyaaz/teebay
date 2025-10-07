@@ -5,7 +5,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "RentInterval" AS ENUM ('HOURLY', 'DAILY', 'WEEKLY', 'MONTLY', 'YEARLY');
+CREATE TYPE "RentInterval" AS ENUM ('HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY');
 
 -- AlterTable
 ALTER TABLE "Product" DROP COLUMN "rentPricePerDay",

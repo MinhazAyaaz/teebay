@@ -27,7 +27,7 @@ enum RentInterval {
   HOURLY
   DAILY
   WEEKLY
-  MONTLY
+  MONTHLY
   YEARLY
 }
 

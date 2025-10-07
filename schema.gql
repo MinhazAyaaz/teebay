@@ -135,19 +135,19 @@ enum ProductStatus {
 type Query {
   findUserByEmail(email: String!): UserModel!
   findUserById(userId: String!): UserModel!
-  getAllProducts: [ProductModel!]!
+  getAllProducts(page: Int! = 1, pageSize: Int! = 10, search: String): [ProductModel!]!
   getCurrentUser: UserModel!
   getCurrentUserOrders: [OrderModel!]!
   getCurrentUserSales: [OrderModel!]!
   getProductById(id: String!): ProductModel!
-  getUserProducts: [ProductModel!]!
+  getUserProducts(page: Int! = 1, pageSize: Int! = 10, search: String): [ProductModel!]!
   test: String!
 }
 
 enum RentInterval {
   DAILY
   HOURLY
-  MONTLY
+  MONTHLY
   WEEKLY
   YEARLY
 }
