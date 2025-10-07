@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { OrdersService } from './orders.service';
 import { OrderModel } from './entities/order.entity';
 import { OrderResponse } from './entities/order-response.entity';
-import { CreateSaleOrderInput } from './dto/create-sale.order.input';
+import { CreateBuyOrderInput } from './dto/create-buy.order.input';
 import { CreateRentOrderInput } from './dto/create-rent.order.input';
 import { GqlAuthGuard } from 'src/common/guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
@@ -25,7 +25,7 @@ export class OrdersResolver {
 
   @Mutation(() => OrderResponse)
   @UseGuards(GqlAuthGuard)
-  createBuyOrder(@Context() ctx: any, @Args('input') input: CreateSaleOrderInput) {
+  createBuyOrder(@Context() ctx: any, @Args('input') input: CreateBuyOrderInput) {
     return this.ordersService.createBuyOrder(ctx.userId, input.productId);
   }
 

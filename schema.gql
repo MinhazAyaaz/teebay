@@ -18,6 +18,10 @@ enum Condition {
   NEW
 }
 
+input CreateBuyOrderInput {
+  productId: ID!
+}
+
 input CreateProductInput {
   categories: [Category!]!
   condition: Condition
@@ -32,10 +36,6 @@ input CreateRentOrderInput {
   endDate: String!
   productId: ID!
   startDate: String!
-}
-
-input CreateSaleOrderInput {
-  productId: ID!
 }
 
 input CreateUserDto {
@@ -58,7 +58,7 @@ input LoginUserDto {
 }
 
 type Mutation {
-  createBuyOrder(input: CreateSaleOrderInput!): OrderResponse!
+  createBuyOrder(input: CreateBuyOrderInput!): OrderResponse!
   createProduct(input: CreateProductInput!): ProductResponse!
   createRentOrder(input: CreateRentOrderInput!): OrderResponse!
   createUser(createUserInput: CreateUserDto!): UserResponse!

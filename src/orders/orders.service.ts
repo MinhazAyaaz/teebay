@@ -75,6 +75,7 @@ export class OrdersService {
             amount: product.salePrice,
             currency: product.currency,
           },
+          include: { product: true, buyer: true },
         });
 
         await tx.product.update({
@@ -84,7 +85,7 @@ export class OrdersService {
 
         return {
           statusCode: HttpStatus.CREATED,
-          message: "Order created successfully",
+          message: "Product bought successfully",
           order: order,
         };
       });
@@ -131,6 +132,22 @@ export class OrdersService {
         const days = Math.max(1, differenceInCalendarDays(end, start));
         const amount = product.rentPrice.toNumber() * days;
 
+        // Application-level pre-check to avoid DB constraint violation on overlaps
+        const overlappingExistingRent = await tx.order.findFirst({
+          where: {
+            productId,
+            type: OrderType.RENT,
+            status: OrderStatus.CONFIRMED,
+            startDate: { lt: end },
+            endDate: { gt: start },
+          },
+        });
+        if (overlappingExistingRent) {
+          throw new BadRequestException(
+            "Selected dates overlap with an existing rental for this product"
+          );
+        }
+
         // DB-level exclusion constraint (add via migration) prevents overlaps
         const order = await tx.order.create({
           data: {
@@ -143,11 +160,17 @@ export class OrdersService {
             amount,
             currency: product.currency,
           },
+          include: { product: true, buyer: true },
+        });
+
+        await tx.product.update({
+          where: { id: productId },
+          data: { status: ProductStatus.RENTED },
         });
 
         return {
           statusCode: HttpStatus.CREATED,
-          message: "Order created successfully",
+          message: "Product rented successfully",
           order: order,
         };
       });
@@ -156,6 +179,16 @@ export class OrdersService {
       // Rethrow specific errors for clarity
       if (error instanceof HttpException) {
         throw error; // Re-throw the HTTP exceptions to keep their status codes
+      } else if (
+        typeof error?.message === "string" &&
+        (error.message.includes("order_no_overlap") ||
+          error.message.includes("23P01") ||
+          error.message.includes("conflicting key value violates exclusion constraint"))
+      ) {
+        // Translate DB exclusion constraint violation into a friendly 400
+        throw new BadRequestException(
+          "Selected dates overlap with an existing rental for this product"
+        );
       } else {
         throw new HttpException(
           "Internal server error",
