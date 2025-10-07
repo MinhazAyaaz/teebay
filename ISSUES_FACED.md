@@ -13,3 +13,6 @@ Time was a bit of a constraint as it was hard to complete a full-stack project a
 
 # Field Validation while creating product and clicking next step
 This would have required some time to implement as I wanted to validate the fields everytime a user clicked Next, to make sure the User cannot go to the next step before entering the values
+
+# Product Cards and Pages should show status (This is an improvement)
+Such as who is currently renting and for what time range or has purchased it already. Can disable the dates which contain dates that the product is already rented. 
