@@ -17,7 +17,7 @@ export class ProductsService {
     const skip = (page - 1) * limit;
 
     const where = {
-      status: ProductStatus.AVAILABLE,
+      status: ProductStatus.AVAILABLE || ProductStatus.RENTED,
       NOT: { ownerId: ownerId },
       ...(opts.search
         ? {
@@ -58,7 +58,7 @@ export class ProductsService {
     const skip = (page - 1) * limit;
 
     const where = {
-      status: ProductStatus.AVAILABLE,
+      status: ProductStatus.AVAILABLE || ProductStatus.RENTED,
       ownerId: ownerId,
       ...(opts.search
         ? {
