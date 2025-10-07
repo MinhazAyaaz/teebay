@@ -121,8 +121,6 @@ export class OrdersService {
         if (!product) throw new NotFoundException("Product not found");
         if (product.ownerId === buyerId)
           throw new BadRequestException("You cannot rent your own product");
-        if (product.status === ProductStatus.RENTED)
-          throw new BadRequestException("Product is already rented");
         if (product.status === ProductStatus.SOLD) {
           throw new BadRequestException("Product is sold");
         }
