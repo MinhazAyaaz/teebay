@@ -1,35 +1,37 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { OrdersService } from './orders.service';
-import { Order } from './entities/order.entity';
-import { CreateOrderInput } from './dto/create-order.input';
-import { UpdateOrderInput } from './dto/update-order.input';
+import { OrderModel } from './entities/order.entity';
+import { OrderResponse } from './entities/order-response.entity';
+import { CreateSaleOrderInput } from './dto/create-sale.order.input';
+import { CreateRentOrderInput } from './dto/create-rent.order.input';
+import { GqlAuthGuard } from 'src/common/guards/gql-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
-@Resolver(() => Order)
+@Resolver(() => OrderModel)
 export class OrdersResolver {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Mutation(() => Order)
-  createOrder(@Args('createOrderInput') createOrderInput: CreateOrderInput) {
-    return this.ordersService.create(createOrderInput);
+  @Query(() => [OrderModel])
+  @UseGuards(GqlAuthGuard)
+  getCurrentUserOrders(@Context() ctx: any) {
+    return this.ordersService.currentUserOrders(ctx.userId);
   }
 
-  @Query(() => [Order], { name: 'orders' })
-  findAll() {
-    return this.ordersService.findAll();
+  @Query(() => [OrderModel])
+  @UseGuards(GqlAuthGuard)
+  getCurrentUserSales(@Context() ctx: any) {
+    return this.ordersService.salesForCurrentUserAsOwner(ctx.userId);
   }
 
-  @Query(() => Order, { name: 'order' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.ordersService.findOne(id);
+  @Mutation(() => OrderResponse)
+  @UseGuards(GqlAuthGuard)
+  createBuyOrder(@Context() ctx: any, @Args('input') input: CreateSaleOrderInput) {
+    return this.ordersService.createBuyOrder(ctx.userId, input.productId);
   }
 
-  @Mutation(() => Order)
-  updateOrder(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
-    return this.ordersService.update(updateOrderInput.id, updateOrderInput);
-  }
-
-  @Mutation(() => Order)
-  removeOrder(@Args('id', { type: () => Int }) id: number) {
-    return this.ordersService.remove(id);
+  @Mutation(() => OrderResponse)
+  @UseGuards(GqlAuthGuard)
+  createRentOrder(@Context() ctx: any, @Args('input') input: CreateRentOrderInput) {
+    return this.ordersService.createRentOrder(ctx.userId, input.productId, input.startDate, input.endDate);
   }
 }
