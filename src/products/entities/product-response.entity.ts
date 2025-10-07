@@ -14,3 +14,12 @@ export class ProductResponse {
   @IsOptional()
   product?: ProductModel;
 }
+
+@ObjectType()
+export class ProductListResponse {
+  @Field(() => [ProductModel])
+  products: ProductModel[];
+
+  @Field(() => Int)
+  totalCount: number;
+}

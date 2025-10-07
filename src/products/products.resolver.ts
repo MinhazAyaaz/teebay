@@ -5,13 +5,13 @@ import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/common/guards/gql-auth.guard';
-import { ProductResponse } from './entities/product-response.entity';
+import { ProductListResponse, ProductResponse } from './entities/product-response.entity';
 
 @Resolver(() => ProductModel)
 export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Query(() => [ProductModel]) 
+  @Query(() => ProductListResponse) 
   @UseGuards(GqlAuthGuard)
   getAllProducts(
     @Context() ctx: any,
@@ -22,7 +22,7 @@ export class ProductsResolver {
     return this.productsService.listAllProducts(ctx.userId, { page, pageSize, search });
   }
 
-  @Query(() => [ProductModel])
+  @Query(() => ProductListResponse)
   @UseGuards(GqlAuthGuard)
   getUserProducts(
     @Context() ctx: any,

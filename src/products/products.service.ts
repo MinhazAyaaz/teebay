@@ -10,7 +10,7 @@ export class ProductsService {
 
   async listAllProducts(
     ownerId: string,
-    opts: { page: number; pageSize: number; search?: string } 
+    opts: { page: number; pageSize: number; search?: string }
   ) {
     const page = Math.max(1, opts.page);
     const limit = Math.max(1, Math.min(10, opts.pageSize));
@@ -22,7 +22,9 @@ export class ProductsService {
       ...(opts.search
         ? {
             OR: [
-              { title: { contains: opts.search, mode: "insensitive" as const } },
+              {
+                title: { contains: opts.search, mode: "insensitive" as const },
+              },
               {
                 description: {
                   contains: opts.search,
@@ -34,13 +36,17 @@ export class ProductsService {
         : {}),
     };
 
-    return this.prisma.product.findMany({
+    const products = await this.prisma.product.findMany({
       where,
       include: { categories: true },
       orderBy: { createdAt: "desc" },
       skip,
       take: limit,
     });
+
+    const totalCount = await this.prisma.product.count({ where });
+
+    return { products, totalCount };
   }
 
   async listUserProducts(
@@ -57,7 +63,9 @@ export class ProductsService {
       ...(opts.search
         ? {
             OR: [
-              { title: { contains: opts.search, mode: "insensitive" as const } },
+              {
+                title: { contains: opts.search, mode: "insensitive" as const },
+              },
               {
                 description: {
                   contains: opts.search,
@@ -69,13 +77,17 @@ export class ProductsService {
         : {}),
     };
 
-    return this.prisma.product.findMany({
+    const products = await this.prisma.product.findMany({
       where,
       include: { categories: true },
       orderBy: { createdAt: "desc" },
       skip,
       take: limit,
     });
+
+    const totalCount = await this.prisma.product.count({ where });
+
+    return { products, totalCount };
   }
 
   async byId(id: string) {

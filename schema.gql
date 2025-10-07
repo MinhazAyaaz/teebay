@@ -103,6 +103,11 @@ type ProductCategoryModel {
   category: Category!
 }
 
+type ProductListResponse {
+  products: [ProductModel!]!
+  totalCount: Int!
+}
+
 type ProductModel {
   categories: [ProductCategoryModel!]!
   condition: Condition!
@@ -135,12 +140,12 @@ enum ProductStatus {
 type Query {
   findUserByEmail(email: String!): UserModel!
   findUserById(userId: String!): UserModel!
-  getAllProducts(page: Int! = 1, pageSize: Int! = 10, search: String): [ProductModel!]!
+  getAllProducts(page: Int! = 1, pageSize: Int! = 10, search: String): ProductListResponse!
   getCurrentUser: UserModel!
   getCurrentUserOrders: [OrderModel!]!
   getCurrentUserSales: [OrderModel!]!
   getProductById(id: String!): ProductModel!
-  getUserProducts(page: Int! = 1, pageSize: Int! = 10, search: String): [ProductModel!]!
+  getUserProducts(page: Int! = 1, pageSize: Int! = 10, search: String): ProductListResponse!
   test: String!
 }
 
