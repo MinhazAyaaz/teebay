@@ -453,13 +453,14 @@ type Mutation {
 ### 1. Rental Date Overlap Prevention
 **Challenge**: Preventing overlapping rental periods for the same product.
 
-**Solution**: 
-- Application-level overlap checking before order creation
-- Database-level exclusion constraints (recommended for production)
-- Clear error messages for users when overlaps occur
+**Solution**: Implemented a two-layer approach combining application-level validation with database-level constraints.
+
+#### Application-Level Overlap Checking
+Before creating any rental order, the system performs a pre-check to identify existing overlapping rentals:
 
 ```typescript
-const overlappingRent = await tx.order.findFirst({
+// Application-level pre-check to avoid DB constraint violation on overlaps
+const overlappingExistingRent = await tx.order.findFirst({
   where: {
     productId,
     type: OrderType.RENT,
@@ -468,7 +469,56 @@ const overlappingRent = await tx.order.findFirst({
     endDate: { gt: start },
   },
 });
+
+if (overlappingExistingRent) {
+  throw new BadRequestException(
+    "Selected dates overlap with an existing rental for this product"
+  );
+}
 ```
+
+**How it works:**
+- Queries for existing confirmed rental orders for the same product
+- Checks if new rental period (`start` to `end`) overlaps with any existing period
+- Overlap condition: `startDate < newEnd AND endDate > newStart`
+- Provides immediate user feedback with clear error messages
+
+#### Database-Level Exclusion Constraint
+Implemented PostgreSQL exclusion constraint for guaranteed data integrity:
+
+```sql
+-- Enable btree_gist for exclusion constraints combining equality + range
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+ALTER TABLE "Order"
+ADD CONSTRAINT order_no_overlap
+EXCLUDE USING GIST (
+  "productId" WITH =,
+  daterange("startDate"::date, "endDate"::date, '[)') WITH &&
+)
+WHERE (type = 'RENT' AND "startDate" IS NOT NULL AND "endDate" IS NOT NULL);
+```
+
+**Key Features:**
+- Uses PostgreSQL's `btree_gist` extension for range-based constraints
+- Prevents overlapping date ranges for the same product at database level
+- Only applies to RENT orders with valid start and end dates
+- `&&` operator checks for range overlap
+- `[)` notation: inclusive start date, exclusive end date
+
+#### Benefits of Two-Layer Approach
+1. **Double Protection**: Both application and database levels prevent overlaps
+2. **User-Friendly**: Clear error messages when overlaps are detected
+3. **Performance**: Application-level check provides fast feedback
+4. **Data Integrity**: Database constraint ensures consistency even if application logic fails
+5. **Atomic Operations**: Uses database transactions to ensure consistency
+6. **Race Condition Prevention**: Database constraint handles concurrent requests
+
+#### Edge Cases Handled
+- **Same-day rentals**: Handled by `[)` range notation (exclusive end date)
+- **Concurrent requests**: Database constraint prevents race conditions
+- **Invalid date ranges**: Validated before overlap checking
+- **Status filtering**: Only checks `CONFIRMED` orders, ignoring pending/cancelled ones
 
 ### 2. Product Status Management
 **Challenge**: Ensuring products can't be sold/rented when already unavailable.
