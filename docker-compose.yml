@@ -28,11 +28,12 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      PORT: ${BACKEND_PORT:-3000}
+      PORT: 3000
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-sazim}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
-    ports:
-      - "${BACKEND_PORT:-3000}:3000"
+    expose:
+      - "3000"
+    # Remove the ports section - let nginx handle external access
 
   frontend:
     build:
@@ -40,7 +41,8 @@ services:
       dockerfile: Dockerfile
     container_name: sazim-frontend
     environment:
-      VITE_GRAPHQL_ENDPOINT: ${VITE_GRAPHQL_ENDPOINT:-http://localhost:3000/graphql}
+      # This is used at BUILD TIME, not runtime
+      VITE_GRAPHQL_ENDPOINT: ${VITE_GRAPHQL_ENDPOINT:-/graphql}
     ports:
       - "5173:80"
     depends_on:
@@ -48,5 +50,3 @@ services:
 
 volumes:
   db-data:
-
-

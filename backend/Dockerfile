@@ -27,13 +27,18 @@ WORKDIR /app
 ENV NODE_ENV=production
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Only production deps for smaller image
+# Copy package files and prisma schema
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --prod --frozen-lockfile
-
-# Copy built artifacts and prisma schema
-COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
+
+# Install production deps + prisma CLI (needed for generation)
+RUN pnpm install --prod --frozen-lockfile && \
+    pnpm add -D prisma && \
+    pnpm prisma generate && \
+    pnpm remove -D prisma
+
+# Copy built artifacts
+COPY --from=build /app/dist ./dist
 
 # Copy entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
@@ -43,5 +48,3 @@ EXPOSE 3000
 
 ENV PORT=3000
 CMD ["/usr/local/bin/docker-entrypoint.sh"]
-
-
