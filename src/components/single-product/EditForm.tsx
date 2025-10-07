@@ -1,57 +1,104 @@
-import { Button, MultiSelect, Select, Textarea, TextInput } from "@mantine/core";
+import {
+  Button,
+  MultiSelect,
+  Select,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
+import { CATEGORIES_OPTIONS, RENT_INTERVAL_OPTIONS } from "../../constants";
+import {
+  Controller,
+  type Control,
+  type SubmitHandler,
+  type UseFormHandleSubmit,
+  type UseFormRegister,
+} from "react-hook-form";
+import type { UpdateProductFormInput, UpdateProductMutation, UpdateProductMutationVariables } from "../../types/product";
+import { MUTATION_UPDATE_PRODUCT } from "../../graphql/products/mutations";
+import { useMutation } from "@apollo/client/react";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
+import { useParams } from "react-router-dom";
 
 type EditFormProps = {
-  name: string;
-  price: number | "";
-  rent: string;
-  categories: string[];
-  interval: string;
-  description: string;
-  setName: (v: string) => void;
-  setPrice: (v: number | "") => void;
-  setRent: (v: string) => void;
-  setCategories: (v: string[]) => void;
-  setInterval: (v: string) => void;
-  setDescription: (v: string) => void;
+  register: UseFormRegister<UpdateProductFormInput>;
+  handleSubmit: UseFormHandleSubmit<UpdateProductFormInput>;
+  control: Control<UpdateProductFormInput>;
   onCancel: () => void;
-  onSave: () => void;
 };
 
 const EditForm = ({
-  name,
-  price,
-  rent,
-  categories,
-  interval,
-  description,
-  setName,
-  setPrice,
-  setRent,
-  setCategories,
-  setInterval,
-  setDescription,
+  register,
+  handleSubmit,
+  control,
   onCancel,
-  onSave,
 }: EditFormProps) => {
+  const [loading, setLoading] = useState(false);
+  const [updateProduct] = useMutation<UpdateProductMutation, UpdateProductMutationVariables>(MUTATION_UPDATE_PRODUCT);
+  const { id } = useParams();
+  const onSubmit: SubmitHandler<UpdateProductFormInput> = async (data) => {
+    setLoading(true);
+    try {
+      const { data: result } = await updateProduct({
+        variables: { input: { id: id || "", ...data } },
+      });
+      if (result?.updateProduct.statusCode === 200) {
+        notifications.show({
+          title: "Success",
+          message: result?.updateProduct.message,
+          color: "green",
+        });
+        onCancel();
+      } else {
+        notifications.show({
+          title: "Error",
+          message: result?.updateProduct.message,
+          color: "red",
+        });
+      }
+    } catch {
+      notifications.show({
+        title: "Error",
+        message: "An error occurred",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-6">
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-4">
-        <TextInput radius="md" placeholder="Product name" value={name} onChange={(e) => setName(e.target.value)} label="Title"/>
-        <MultiSelect
-          label="Categories"
+        <TextInput
           radius="md"
-          placeholder="Categories (comma separated)"
-          data={["Category 1", "Category 2", "Category 3"]}
-          value={categories}
-          onChange={(values) => setCategories(values)}
+          placeholder="Product name"
+          {...register("title")}
+          label="Title"
+          disabled={loading}
+        />
+        <Controller
+          name="categories"
+          control={control}
+          render={({ field }) => (
+            <MultiSelect
+              label="Categories"
+              description="Select the categories of the product"
+              required
+              radius="md"
+              data={CATEGORIES_OPTIONS}
+              {...field}
+              disabled={loading}
+            />
+          )}
         />
         <Textarea
           rows={10}
           radius="md"
           placeholder="Describe the product"
           label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.currentTarget.value)}
+          {...register("description")}
+          disabled={loading}
         />
         <div className="flex flex-col sm:flex-row gap-4">
           <TextInput
@@ -59,35 +106,43 @@ const EditForm = ({
             radius="md"
             label="Price"
             placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+            {...register("salePrice", { valueAsNumber: true })}
+            disabled={loading}
           />
-          <TextInput radius="md" placeholder="Rent" value={rent} onChange={(e) => setRent(e.target.value)} label="Daily rent"/>
-          <Select
-            label="Intervals"
+          <TextInput
             radius="md"
-            placeholder="Intervals"
-            data={["Hourly", "Daily", "Weekly", "Monthly", "Yearly"]}
-            value={interval}
-            onChange={(value) => setInterval(value ?? "")}
+            placeholder="Rent"
+            {...register("rentPrice", { valueAsNumber: true })}
+            label="Daily rent"
+            disabled={loading}
+          />
+          <Controller
+            name="rentInterval"
+            control={control}
+            render={({ field }) => (
+              <Select
+                label="Intervals"
+                radius="md"
+                placeholder="Intervals"
+                data={RENT_INTERVAL_OPTIONS}
+                {...field}
+                disabled={loading}
+              />
+            )}
           />
         </div>
-        
-        
       </div>
 
       <div className="flex flex-row gap-3 justify-end">
-        <Button color="gray" variant="light" radius="md" onClick={onCancel}>
+        <Button color="gray" variant="light" radius="md" onClick={onCancel} disabled={loading}>
           Cancel
         </Button>
-        <Button color="black" radius="md" onClick={onSave}>
+        <Button color="black" radius="md" type="submit" disabled={loading}>
           Save Changes
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 
 export default EditForm;
-
-
