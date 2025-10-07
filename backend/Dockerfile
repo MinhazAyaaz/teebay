@@ -27,7 +27,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy package files and prisma schema
+# Copy package files
 COPY package.json pnpm-lock.yaml ./
 COPY --from=build /app/prisma ./prisma
 
