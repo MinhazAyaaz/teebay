@@ -18,6 +18,8 @@ const ProductCard = ({ product, type, hover = true, refetch }: ProductCardProps)
   const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
 
+  console.log(product);
+
   return (
     <>
       <div
@@ -43,19 +45,21 @@ const ProductCard = ({ product, type, hover = true, refetch }: ProductCardProps)
           )}
         </div>
         <h1 className="text-xs sm:text-sm text-gray-500">
-          Categories: {product.categories.map((category) => CATEGORIES[category.category]).join(",")}
+          <span className="font-bold">Categories:</span> {(product.categories ?? [])
+            .map((category) => CATEGORIES[category.category] ?? category.category)
+            .join(", ")}
         </h1>
         <h1 className="text-xs sm:text-sm text-gray-500">
-          Price: ${product.salePrice} | Rent: ${product.rentPrice} {RENT_INTERVALS[product.rentInterval]}
+          <span className="font-bold">Price:</span> ${product.salePrice} | <span className="font-bold">Rent:</span> ${product.rentPrice} {RENT_INTERVALS[product.rentInterval] ?? product.rentInterval}
         </h1>
         <h1 className="text-xs sm:text-sm">{product.description}</h1>
         <Divider className="my-1" />
         <div className="flex justify-between">
           <h1 className="text-xs sm:text-sm text-gray-500">
-            Date posted: {formatDateWithOrdinal(product.createdAt)}
+            <span className="font-bold">Date posted:</span> {formatDateWithOrdinal(product.createdAt)}
           </h1>
           <h1 className="text-xs sm:text-sm text-gray-500">
-            {product.views} views
+            {product.views || 0} views
           </h1>
         </div>
       </div>

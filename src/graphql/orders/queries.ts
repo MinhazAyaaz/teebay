@@ -16,6 +16,15 @@ export const QUERY_GET_USER_ORDERS = gql`
       product {
         id
         title
+        categories {
+          category
+        }
+        rentPrice
+        rentInterval
+        salePrice
+        status
+        currency
+        createdAt
       }
     }
   }
@@ -37,6 +46,15 @@ export const QUERY_GET_USER_SALES = gql`
       product {
         id
         title
+        categories {
+          category
+        }
+        rentPrice
+        rentInterval
+        salePrice
+        status
+        currency
+        createdAt
       }
     }
   }
