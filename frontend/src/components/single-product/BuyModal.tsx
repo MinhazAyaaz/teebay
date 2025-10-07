@@ -27,7 +27,13 @@ const BuyModal = ({
     CreateBuyOrderMutation,
     CreateBuyOrderMutationVariables
   >(MUTATION_CREATE_BUY_ORDER, {
-    refetchQueries: [{ query: QUERY_ALL_PRODUCTS }],
+    refetchQueries: [
+      {
+        query: QUERY_ALL_PRODUCTS,
+        variables: { pageSize: 5, page: 1, search: "" },
+      },
+    ],
+
     awaitRefetchQueries: true,
   });
   const [loading, setLoading] = useState(false);
@@ -58,8 +64,11 @@ const BuyModal = ({
         awaitRefetchQueries: true,
       });
 
-      const status = result?.createBuyOrder.statusCode as number | string | undefined;
-      const isSuccess = status === 200 || status === 201
+      const status = result?.createBuyOrder.statusCode as
+        | number
+        | string
+        | undefined;
+      const isSuccess = status === 200 || status === 201;
 
       if (isSuccess) {
         notifications.show({

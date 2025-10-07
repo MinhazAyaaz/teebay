@@ -1,7 +1,10 @@
 import { Button, Modal } from "@mantine/core";
 import { MUTATION_DELETE_PRODUCT } from "../../graphql/products/mutations";
 import { QUERY_USER_PRODUCTS } from "../../graphql/products/queries";
-import type { DeleteProductMutation, DeleteProductMutationVariables } from "../../types/product";
+import type {
+  DeleteProductMutation,
+  DeleteProductMutationVariables,
+} from "../../types/product";
 import { useMutation } from "@apollo/client/react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
@@ -20,7 +23,10 @@ const DeleteModal = ({
   refetch,
   productId,
 }: DeleteModalProps) => {
-  const [deleteProduct] = useMutation<DeleteProductMutation, DeleteProductMutationVariables>(MUTATION_DELETE_PRODUCT);
+  const [deleteProduct] = useMutation<
+    DeleteProductMutation,
+    DeleteProductMutationVariables
+  >(MUTATION_DELETE_PRODUCT);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -37,12 +43,24 @@ const DeleteModal = ({
       }
       const { data: result } = await deleteProduct({
         variables: { id: productId },
-        refetchQueries: [{ query: QUERY_USER_PRODUCTS }],
+        refetchQueries: [
+          {
+            query: QUERY_USER_PRODUCTS,
+            variables: { pageSize: 5, page: 1, search: "" },
+          },
+        ],
         awaitRefetchQueries: true,
       });
 
-      const status = result?.deleteProduct.statusCode as number | string | undefined;
-      const isSuccess = status === 200 || status === 201 || status === "OK" || status === "CREATED";
+      const status = result?.deleteProduct.statusCode as
+        | number
+        | string
+        | undefined;
+      const isSuccess =
+        status === 200 ||
+        status === 201 ||
+        status === "OK" ||
+        status === "CREATED";
       if (isSuccess) {
         notifications.show({
           title: "Success",
@@ -58,7 +76,7 @@ const DeleteModal = ({
           color: "red",
         });
       }
-    } catch (error) { 
+    } catch (error) {
       notifications.show({
         title: "Error",
         message: error instanceof Error ? error.message : "An error occurred",
@@ -83,7 +101,12 @@ const DeleteModal = ({
           undone.
         </p>
         <div className="flex justify-end gap-4">
-          <Button onClick={deleteClose} color="black" radius="md" disabled={loading}>
+          <Button
+            onClick={deleteClose}
+            color="black"
+            radius="md"
+            disabled={loading}
+          >
             Cancel
           </Button>
           <Button
