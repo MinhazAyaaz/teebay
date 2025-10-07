@@ -9,20 +9,27 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { notifications } from '@mantine/notifications';
+import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { type SignUpFormInput, type CreateUserMutation, type CreateUserMutationVariables } from "../types/user";
+import {
+  type SignUpFormInput,
+  type CreateUserMutation,
+  type CreateUserMutationVariables,
+} from "../types/user";
 import { useMutation } from "@apollo/client/react";
 import { MUTATION_CREATE_USER } from "../graphql/users/mutations";
 import { useState } from "react";
+import { useAuth } from "../context/useAuth";
 
 const Signup = () => {
   const { register, handleSubmit, reset } = useForm<SignUpFormInput>();
   const [loading, setLoading] = useState(false);
-  const [createUser] = useMutation<CreateUserMutation, CreateUserMutationVariables>(
-    MUTATION_CREATE_USER
-  );
+  const [createUser] = useMutation<
+    CreateUserMutation,
+    CreateUserMutationVariables
+  >(MUTATION_CREATE_USER);
+  const { login } = useAuth();
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
     setLoading(true);
@@ -33,7 +40,7 @@ const Signup = () => {
         message: "Passwords do not match",
         color: "red",
       });
-      return; 
+      return;
     }
     try {
       const { data: result } = await createUser({
@@ -45,9 +52,8 @@ const Signup = () => {
           message: result?.createUser.message,
           color: "green",
         });
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+        login(result?.createUser.user.id);
+        navigate("/");
       } else {
         notifications.show({
           title: "Error",
@@ -65,7 +71,7 @@ const Signup = () => {
       reset();
       setLoading(false);
     }
-  }; 
+  };
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
@@ -99,6 +105,7 @@ const Signup = () => {
                 required
                 radius="md"
                 {...register("firstName")}
+                disabled={loading}
               />
               <TextInput
                 label="Last Name"
@@ -106,6 +113,7 @@ const Signup = () => {
                 required
                 radius="md"
                 {...register("lastName")}
+                disabled={loading}
               />
             </div>
             <TextInput
@@ -117,6 +125,7 @@ const Signup = () => {
               mb="md"
               radius="md"
               {...register("email")}
+              disabled={loading}
             />
             <div className="flex flex-col sm:flex-row gap-4">
               {" "}
@@ -127,6 +136,7 @@ const Signup = () => {
                 required
                 radius="md"
                 {...register("address")}
+                disabled={loading}
               />
               <TextInput
                 label="Phone"
@@ -134,6 +144,7 @@ const Signup = () => {
                 required
                 radius="md"
                 {...register("phone")}
+                disabled={loading}
               />
             </div>
             <PasswordInput
@@ -143,6 +154,7 @@ const Signup = () => {
               mt="md"
               radius="md"
               {...register("password")}
+              disabled={loading}
             />
             <PasswordInput
               label="Confirm Password"
@@ -151,9 +163,17 @@ const Signup = () => {
               mt="md"
               radius="md"
               {...register("confirmPassword")}
+              disabled={loading}
             />
-            <Checkbox label="Remember me" mt="md" />
-            <Button fullWidth mt="xl" radius="md" color="black" type="submit" loading={loading}>
+            <Checkbox label="Remember me" mt="md" disabled={loading} />
+            <Button
+              fullWidth
+              mt="xl"
+              radius="md"
+              color="black"
+              type="submit"
+              loading={loading}
+            >
               Create Account
             </Button>
 

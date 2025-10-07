@@ -3,11 +3,12 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { LINKS } from "../constants";
 import { useDisclosure } from "@mantine/hooks";
 import { Burger } from "@mantine/core";
+import { useAuth } from "../context/useAuth";
 
 const Navbar = () => {
   const [opened, { toggle }] = useDisclosure();
   const location = useLocation();
-
+  const { logout } = useAuth();
   const shouldRender = useMemo(() => {
     const url = location.pathname;
     return !(url === "/login" || url === "/signup");
@@ -54,7 +55,7 @@ const Navbar = () => {
             <Link
               to="/login"
               onClick={() => {
-                localStorage.removeItem("token");
+                logout();
               }}
               className="inline-block leading-none px-3 py-2 rounded-md  text-gray-700 text-sm font-medium bg-gray-200 hover:bg-gray-300 duration-200"
             >

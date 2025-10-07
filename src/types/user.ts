@@ -44,3 +44,29 @@ export type LoginFormInput = {
   email: string;
   password: string;
 };
+
+export type LoginUserFormInput = {
+  email: string;
+  password: string;
+};
+
+export type LoginUserMutation = {
+    loginUser: {
+      statusCode: number;
+      message: string;
+      user: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        address: string;
+        phone: string;
+        email: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+    };
+  };
+  
+  export type LoginUserMutationVariables = {
+    loginUserInput: LoginUserFormInput;
+  };
