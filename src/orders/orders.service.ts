@@ -12,7 +12,7 @@ export class OrdersService {
   async currentUserOrders(buyerId: string) {
     try {
       return this.prisma.order.findMany({
-        include: { product: true, buyer: true },
+        include: { product: { include: { categories: true } }, buyer: true },
         where: { buyerId },
         orderBy: { createdAt: "desc" },
       });
@@ -33,7 +33,7 @@ export class OrdersService {
   async salesForCurrentUserAsOwner(ownerId: string) {
     try {
       return this.prisma.order.findMany({
-        include: { product: true, buyer: true },
+        include: { product: { include: { categories: true } }, buyer: true },
         where: { product: { ownerId } },
         orderBy: { createdAt: "desc" },
       });
