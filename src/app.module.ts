@@ -6,7 +6,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { AppResolver } from './app.resolver'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
 import { UsersModule } from './users/users.module'
-import { AuthModule } from './auth/auth.module'
+import { ProductsModule } from './products/products.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
     imports: [
@@ -19,7 +20,8 @@ import { AuthModule } from './auth/auth.module'
             plugins: [ApolloServerPluginLandingPageLocalDefault()],
         }),
         UsersModule,
-        AuthModule,
+        ProductsModule,
+        OrdersModule,
     ],
     controllers: [AppController],
     providers: [AppService, AppResolver],
