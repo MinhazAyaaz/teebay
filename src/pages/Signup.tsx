@@ -1,7 +1,6 @@
 import {
   Anchor,
   Button,
-  Checkbox,
   Container,
   Paper,
   PasswordInput,
@@ -165,7 +164,6 @@ const Signup = () => {
               {...register("confirmPassword")}
               disabled={loading}
             />
-            <Checkbox label="Remember me" mt="md" disabled={loading} />
             <Button
               fullWidth
               mt="xl"

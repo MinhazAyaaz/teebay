@@ -1,7 +1,6 @@
 import {
   Anchor,
   Button,
-  Checkbox,
   Container,
   Paper,
   PasswordInput,
@@ -99,7 +98,6 @@ const Login = () => {
               radius="md"
               disabled={loading}
             />
-            <Checkbox label="Remember me" mt="md" disabled={loading} />
             <Button
               fullWidth
               mt="xl"
