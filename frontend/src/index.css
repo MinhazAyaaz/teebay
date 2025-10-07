@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 253, 253, 0.87);
+  background-color: #242424;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  /* Prevent zoom on iOS Safari */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  background-color: #F0F8FF;
+  overflow-x: hidden;
+  /* Prevent horizontal bounce on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Improve text rendering on mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  body {
+    /* Prevent zoom on double tap */
+    touch-action: manipulation;
+    /* Better scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  :root {
+    font-size: 16px;
+  }
+}
