@@ -52,10 +52,10 @@ const Login = () => {
           color: "red",
         });
       }
-    } catch {
+    } catch (error) {
       notifications.show({
         title: "Error",
-        message: "An error occurred",
+        message: error instanceof Error ? error.message : "An error occurred",
         color: "red",
       });
     } finally {
