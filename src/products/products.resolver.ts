@@ -12,8 +12,8 @@ export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
   @Query(() => [ProductModel]) 
-  getAllProducts() {
-    return this.productsService.list();
+  getAllProducts(@Context() ctx: any) {
+    return this.productsService.list(ctx.userId);
   }
 
   @Query(() => ProductModel)

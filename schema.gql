@@ -18,11 +18,6 @@ enum Condition {
   NEW
 }
 
-input CreateOrderInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 input CreateProductInput {
   categories: [Category!]!
   condition: Condition
@@ -30,6 +25,16 @@ input CreateProductInput {
   rentPricePerDay: Float
   salePrice: Float
   title: String!
+}
+
+input CreateRentOrderInput {
+  endDate: String!
+  productId: ID!
+  startDate: String!
+}
+
+input CreateSaleOrderInput {
+  productId: ID!
 }
 
 input CreateUserDto {
@@ -52,18 +57,44 @@ input LoginUserDto {
 }
 
 type Mutation {
-  createOrder(createOrderInput: CreateOrderInput!): Order!
+  createBuyOrder(input: CreateSaleOrderInput!): OrderResponse!
   createProduct(input: CreateProductInput!): ProductResponse!
+  createRentOrder(input: CreateRentOrderInput!): OrderResponse!
   createUser(createUserInput: CreateUserDto!): UserResponse!
   loginUser(loginUserInput: LoginUserDto!): UserResponse!
-  removeOrder(id: Int!): Order!
-  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
   updateProduct(input: UpdateProductInput!): ProductResponse!
 }
 
-type Order {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type OrderModel {
+  amount: Float!
+  buyer: UserModel!
+  buyerId: String!
+  createdAt: String!
+  currency: String!
+  endDate: String
+  id: ID!
+  product: ProductModel!
+  productId: String!
+  startDate: String
+  status: OrderStatus!
+  type: OrderType!
+}
+
+type OrderResponse {
+  message: String!
+  order: OrderModel!
+  statusCode: Int!
+}
+
+enum OrderStatus {
+  CANCELLED
+  CONFIRMED
+  PENDING
+}
+
+enum OrderType {
+  RENT
+  SALE
 }
 
 type ProductCategoryModel {
@@ -101,16 +132,10 @@ type Query {
   findUserById(userId: String!): UserModel!
   getAllProducts: [ProductModel!]!
   getCurrentUser: UserModel!
+  getCurrentUserOrders: [OrderModel!]!
+  getCurrentUserSales: [OrderModel!]!
   getProductById(id: String!): ProductModel!
-  order(id: Int!): Order!
-  orders: [Order!]!
   test: String!
-}
-
-input UpdateOrderInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
 }
 
 input UpdateProductInput {
