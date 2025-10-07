@@ -5,11 +5,14 @@ import '@mantine/dates/styles.css';
 import './index.css'
 import App from './App.tsx'
 import { MantineProvider } from '@mantine/core'
+import { AuthProvider } from './context/AuthProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <MantineProvider>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </MantineProvider>
   </StrictMode>,
 )
