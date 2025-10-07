@@ -25,7 +25,7 @@ const AllProducts = () => {
   );
 
   useEffect(() => {
-    if (data?.getAllProducts?.length && data.getAllProducts.length > 0) {
+    if (data?.getAllProducts?.length && data.getAllProducts.length > 0) { 
       setProducts(data.getAllProducts || []);
       setTotal(data.getAllProducts.length || 0);
     }

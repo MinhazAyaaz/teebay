@@ -26,9 +26,9 @@ const MyProducts = () => {
   );
 
   useEffect(() => {
-    if (data?.getUserProducts?.length && data.getUserProducts.length > 0) {
-      setProducts(data.getUserProducts || []);
-      setTotal(data.getUserProducts.length || 0);
+    if (data && Array.isArray(data.getUserProducts)) {
+      setProducts(data.getUserProducts);
+      setTotal(data.getUserProducts.length);
     }
   }, [data]);
 

@@ -1,15 +1,11 @@
 import { Trash2 } from "lucide-react";
 import { formatDateWithOrdinal } from "../utils";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
-import { Button, Divider, Modal } from "@mantine/core";
+import { Divider } from "@mantine/core";
 import type { Product } from "../types/product";
 import { CATEGORIES, RENT_INTERVALS } from "../constants";
-import { useMutation } from "@apollo/client/react";
-import { MUTATION_DELETE_PRODUCT } from "../graphql/products/mutations";
-import type { DeleteProductMutation, DeleteProductMutationVariables } from "../types/product";
-import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "./single-product/DeleteModal";
  
 type ProductCardProps = {
   product: Product;
@@ -20,41 +16,7 @@ type ProductCardProps = {
 
 const ProductCard = ({ product, type, hover = true, refetch }: ProductCardProps) => {
   const [opened, { open, close }] = useDisclosure(false);
-  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
-  const [deleteProduct] = useMutation<DeleteProductMutation , DeleteProductMutationVariables>(MUTATION_DELETE_PRODUCT);
-  const handleDelete = async () => {
-    setDeleting(true);
-    try {
-      const { data: result } = await deleteProduct({
-        variables: { id: product.id },
-      });
-
-      if (result?.deleteProduct.statusCode === 200) {
-        notifications.show({
-          title: "Success",
-          message: result?.deleteProduct.message,
-          color: "green",
-        });
-        refetch();
-      } else {
-        notifications.show({
-          title: "Error",
-          message: result?.deleteProduct.message,
-          color: "red",
-        });
-      }
-    } catch { 
-      notifications.show({
-        title: "Error",
-        message: "An error occurred",
-        color: "red",
-      });
-    } finally {
-      setDeleting(false);
-      close();
-    }
-  };
 
   return (
     <>
@@ -97,27 +59,7 @@ const ProductCard = ({ product, type, hover = true, refetch }: ProductCardProps)
           </h1>
         </div>
       </div>
-      <Modal opened={opened} onClose={close} title="Delete Product" centered>
-        <div className="flex flex-col gap-4">
-          <p className="text-gray-500">
-            Are you sure you want to delete this product? This action cannot be
-            undone.
-          </p>
-          <div className="flex justify-end gap-4">
-            <Button onClick={close} color="black" radius="md">
-              Cancel
-            </Button>
-            <Button
-              onClick={handleDelete}
-              loading={deleting}
-              color="red"
-              radius="md"
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <DeleteModal deleteOpened={opened} deleteClose={close} refetch={refetch} productId={product.id} />
     </>
   );
 };

@@ -1,16 +1,14 @@
 import { Button } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import type { DeleteProductMutation, DeleteProductMutationVariables, Product } from "../types/product";
+import type { Product } from "../types/product";
 import SingleProductHeader from "../components/single-product/Header";
 import EditForm from "../components/single-product/EditForm";
 import ReadOnly from "../components/single-product/ReadOnly";
 import SingleProductLoading from "../components/single-product/Loading";
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useQuery } from "@apollo/client/react";
 import { QUERY_PRODUCT_BY_ID } from "../graphql/products/queries";
 import type { ProductQuery, UpdateProductFormInput } from "../types/product";
-import { notifications } from "@mantine/notifications";
-import { MUTATION_DELETE_PRODUCT } from "../graphql/products/mutations";
 import { useForm } from "react-hook-form";
 
 const SingleProduct = () => {
@@ -18,17 +16,23 @@ const SingleProduct = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isMyProduct = useMemo(() => location.pathname.startsWith("/my-products"), [location.pathname]);
+  const isMyProduct = useMemo(
+    () => location.pathname.startsWith("/my-products"),
+    [location.pathname]
+  );
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const {control, register, handleSubmit, reset} = useForm<UpdateProductFormInput>();
+  const { control, register, handleSubmit, reset } =
+    useForm<UpdateProductFormInput>();
 
-  const { data, refetch } = useQuery<ProductQuery, { id: string }>(QUERY_PRODUCT_BY_ID, {
-    variables: { id: id || "" },
-  });
-  const [deleteProduct] = useMutation<DeleteProductMutation, DeleteProductMutationVariables>(MUTATION_DELETE_PRODUCT);
+  const { data, refetch } = useQuery<ProductQuery, { id: string }>(
+    QUERY_PRODUCT_BY_ID,
+    {
+      variables: { id: id || "" },
+    }
+  );
 
   useEffect(() => {
     if (data) {
@@ -44,7 +48,7 @@ const SingleProduct = () => {
       setLoading(false);
     }, 500);
 
-    return () => clearTimeout(timeout); 
+    return () => clearTimeout(timeout);
   }, [id, refetch]);
 
   useEffect(() => {
@@ -59,39 +63,6 @@ const SingleProduct = () => {
       });
     }
   }, [product, isEditing]);
-
-  const handleDelete = async () => {
-    setLoading(true);
-    try {
-      const { data: result } = await deleteProduct({
-        variables: { id: product?.id || "" },
-      });
-
-      if (result?.deleteProduct.statusCode === 200) {
-        notifications.show({
-          title: "Success",
-          message: result?.deleteProduct.message,
-          color: "green",
-        });
-        navigate("/my-products");
-      } else {
-        notifications.show({
-          title: "Error",
-          message: result?.deleteProduct.message,
-          color: "red",
-        });
-      }
-    } catch { 
-      notifications.show({
-        title: "Error",
-        message: "An error occurred",
-        color: "red",
-      });
-    } finally {
-      setLoading(false);
-      navigate("/my-products");
-    }
-  };
 
   const handleStartEdit = () => {
     if (!product) return;
@@ -109,20 +80,31 @@ const SingleProduct = () => {
   if (!product) {
     return (
       <div className="h-screen w-full flex flex-col items-center justify-center gap-4 p-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-700">Product not found</h1>
-        <Button color="black" radius="md" onClick={() => navigate(-1)}>Go Back</Button>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-700">
+          Product not found
+        </h1>
+        <Button color="black" radius="md" onClick={() => navigate(-1)}>
+          Go Back
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-start gap-4 sm:gap-6 p-4 sm:p-6">
-      <SingleProductHeader onBack={() => navigate(-1)} canEdit={isMyProduct} isEditing={isEditing} onStartEdit={handleStartEdit} onDelete={handleDelete} />
+      <SingleProductHeader
+        onBack={() => navigate(-1)}
+        canEdit={isMyProduct}
+        isEditing={isEditing}
+        onStartEdit={handleStartEdit}
+        refetch={refetch}
+        productId={product?.id}
+      />
 
       <div className="w-full max-w-5xl overflow-y-auto">
         <div className="w-full rounded-md py-6 px-6 sm:px-8 md:px-1 flex flex-col gap-6">
           {!isEditing ? (
-              <ReadOnly product={product} />
+            <ReadOnly product={product} />
           ) : (
             <EditForm
               control={control}
