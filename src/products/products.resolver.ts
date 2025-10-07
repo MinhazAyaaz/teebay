@@ -12,11 +12,19 @@ export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
   @Query(() => [ProductModel]) 
+  @UseGuards(GqlAuthGuard)
   getAllProducts(@Context() ctx: any) {
-    return this.productsService.list(ctx.userId);
+    return this.productsService.listAllProducts(ctx.userId);
+  }
+
+  @Query(() => [ProductModel])
+  @UseGuards(GqlAuthGuard)
+  getUserProducts(@Context() ctx: any) {
+    return this.productsService.listUserProducts(ctx.userId);
   }
 
   @Query(() => ProductModel)
+  @UseGuards(GqlAuthGuard)
   getProductById(@Args('id', { type: () => String }) id: string) {
     return this.productsService.byId(id);
   }
@@ -31,5 +39,11 @@ export class ProductsResolver {
   @UseGuards(GqlAuthGuard)
   updateProduct(@Context() ctx: any, @Args('input') input: UpdateProductInput) {
     return this.productsService.update(ctx.userId, input);
+  }
+
+  @Mutation(() => ProductResponse)
+  @UseGuards(GqlAuthGuard)
+  deleteProduct(@Context() ctx: any, @Args('id', { type: () => String }) id: string) {
+    return this.productsService.delete(ctx.userId, id);
   }
 }

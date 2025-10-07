@@ -47,4 +47,10 @@ export class ProductModel {
 
   @Field()
   ownerId: string;
+
+  @Field()
+  createdAt: Date;
+
+  @Field()
+  updatedAt: Date;
 }

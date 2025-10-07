@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { ProductModel } from './product.entity';
+import { IsOptional } from 'class-validator';
 
 @ObjectType()
 export class ProductResponse {
@@ -10,5 +11,6 @@ export class ProductResponse {
   message: string;
 
   @Field(() => ProductModel)
-  product: ProductModel;
+  @IsOptional()
+  product?: ProductModel;
 }
