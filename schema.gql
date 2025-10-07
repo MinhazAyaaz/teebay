@@ -2,6 +2,36 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+enum Category {
+  ELECTRONICS
+  FURNITURE
+  HOME_APPLIANCES
+  OUTDOOR
+  SPORTING_GOODS
+  TOYS
+}
+
+enum Condition {
+  FAIR
+  GOOD
+  LIKE_NEW
+  NEW
+}
+
+input CreateOrderInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateProductInput {
+  categories: [Category!]!
+  condition: Condition
+  description: String
+  rentPricePerDay: Float
+  salePrice: Float
+  title: String!
+}
+
 input CreateUserDto {
   address: String!
   email: String!
@@ -16,30 +46,96 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginUserDto {
+  email: String!
+  password: String!
+}
+
 type Mutation {
-  createUser(createUserInput: CreateUserDto!): User!
-  validateUser(validateUserInput: ValidateUserDto!): User!
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  createProduct(input: CreateProductInput!): ProductResponse!
+  createUser(createUserInput: CreateUserDto!): UserResponse!
+  loginUser(loginUserInput: LoginUserDto!): UserResponse!
+  removeOrder(id: Int!): Order!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order!
+  updateProduct(input: UpdateProductInput!): ProductResponse!
+}
+
+type Order {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type ProductCategoryModel {
+  category: Category!
+}
+
+type ProductModel {
+  categories: [ProductCategoryModel!]!
+  condition: Condition!
+  currency: String!
+  description: String
+  id: ID!
+  ownerId: String!
+  rentPricePerDay: Float
+  salePrice: Float
+  status: ProductStatus!
+  title: String!
+}
+
+type ProductResponse {
+  message: String!
+  product: ProductModel!
+  statusCode: Int!
+}
+
+enum ProductStatus {
+  ARCHIVED
+  AVAILABLE
+  RENTED
+  SOLD
 }
 
 type Query {
-  hello: String!
-  users: [User!]!
-  welcome: String!
+  findUserByEmail(email: String!): UserModel!
+  findUserById(userId: String!): UserModel!
+  getAllProducts: [ProductModel!]!
+  getCurrentUser: UserModel!
+  getProductById(id: String!): ProductModel!
+  order(id: Int!): Order!
+  orders: [Order!]!
+  test: String!
 }
 
-type User {
+input UpdateOrderInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateProductInput {
+  categories: [Category!]
+  condition: Condition
+  description: String
+  id: ID!
+  rentPricePerDay: Float
+  salePrice: Float
+  title: String
+}
+
+type UserModel {
   address: String!
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: ID!
   lastName: String!
-  password: String!
   phone: String!
   updatedAt: DateTime!
 }
 
-input ValidateUserDto {
-  email: String!
-  password: String!
+type UserResponse {
+  message: String!
+  statusCode: Int!
+  user: UserModel!
 }

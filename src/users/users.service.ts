@@ -88,15 +88,7 @@ export class UsersService {
   async findUserById(userId: string) {
     try {
       const user = await this.prisma.user.findUnique({
-        where: { id: userId },
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          address: true,
-          phone: true,
-        },
+        where: { id: userId }
       });
 
       if (!user) {
@@ -121,15 +113,7 @@ export class UsersService {
   async getUserByEmail(email: string) {
     try {
       const user = await this.prisma.user.findUnique({
-        where: { email },
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          address: true,
-          phone: true,
-        },
+        where: { email }
       });
 
       if (!user) {
@@ -154,15 +138,7 @@ export class UsersService {
   async getCurrentUser(userId: string) {
     try {
       const user = await this.prisma.user.findUnique({
-        where: { id: userId },
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          address: true,
-          phone: true,
-        },
+        where: { id: userId }
       });
 
       if (!user) {
