@@ -1,19 +1,35 @@
 import { Input, Pagination, ScrollArea } from "@mantine/core";
-import { MY_MOCK_PRODUCTS } from "../constants";
 import ProductCard from "../components/ProductCard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import ProductCardLoader from "../components/ProductCardLoader";
+import { useQuery } from "@apollo/client/react";
+import { QUERY_PRODUCTS } from "../graphql/products/queries";
+import type { Product, ProductQuery, ProductsVars } from "../types/product";
 
 const AllProducts = () => {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const { data, loading, refetch } = useQuery<ProductQuery, ProductsVars>(
+    QUERY_PRODUCTS,
+    {
+      variables: { search: "", page: 1, pageSize },
+      fetchPolicy: "cache-and-network",
+      notifyOnNetworkStatusChange: true,
+    }
+  );
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+    const id = setTimeout(() => {
+      refetch({ search, page, pageSize });
+    }, 300);
+    return () => clearTimeout(id);
+  }, [search, page, pageSize, refetch]);
+
+  const products = useMemo(() => data?.products?.items ?? [], [data]);
+  const total = data?.products?.total ?? 0;
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-start gap-4 sm:gap-6 p-4 sm:p-6">
@@ -37,7 +53,7 @@ const AllProducts = () => {
           <ProductCardLoader />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 px-2 sm:px-4">
-            {MY_MOCK_PRODUCTS.map((product) => (
+            {products.map((product: Product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -49,9 +65,10 @@ const AllProducts = () => {
       </ScrollArea>
       <Pagination
         color="black"
-        total={10}
-        value={1}
+        total={Math.max(1, Math.ceil(total / pageSize))}
+        value={page}
         radius="md"
+        onChange={setPage}
         className="w-full sm:w-auto"
       />
     </div>
