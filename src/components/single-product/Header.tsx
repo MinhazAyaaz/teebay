@@ -1,7 +1,5 @@
 import { Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 import BuyModal from "./BuyModal";
 import RentModal from "./RentModal";
@@ -11,7 +9,8 @@ type SingleProductHeaderProps = {
   canEdit: boolean;
   isEditing: boolean;
   onStartEdit: () => void;
-  onDelete: () => void;
+  refetch: () => void;
+  productId?: string;
 };
 
 const SingleProductHeader = ({
@@ -19,41 +18,14 @@ const SingleProductHeader = ({
   canEdit,
   isEditing,
   onStartEdit,
-  onDelete,
+  refetch,
+  productId,
 }: SingleProductHeaderProps) => {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
   const [buyOpened, { open: buyOpen, close: buyClose }] = useDisclosure(false);
   const [rentOpened, { open: rentOpen, close: rentClose }] =
     useDisclosure(false);
-
-  const handleDelete = () => {
-    setLoading(true);
-    setTimeout(() => {
-      deleteClose();
-      setLoading(false);
-    }, 1000);
-    onDelete();
-    navigate("/my-products");
-  };
-
-  const handleBuy = () => {
-    setLoading(true);
-    setTimeout(() => {
-      buyClose();
-      setLoading(false);
-    }, 1000);
-  };
-
-  const handleRent = () => {
-    setLoading(true);
-    setTimeout(() => {
-      rentClose();
-      setLoading(false);
-    }, 1000);
-  };
 
   return (
     <>
@@ -90,20 +62,20 @@ const SingleProductHeader = ({
       <DeleteModal
         deleteOpened={deleteOpened}
         deleteClose={deleteClose}
-        handleDelete={handleDelete}
-        loading={loading}
+        refetch={refetch}
+        productId={productId || ""}
       />
       <BuyModal
         buyOpened={buyOpened}
         buyClose={buyClose}
-        handleBuy={handleBuy}
-        loading={loading}
+        refetch={refetch}
+        productId={productId || ""}
       />
       <RentModal
         rentOpened={rentOpened}
         rentClose={rentClose}
-        handleRent={handleRent}
-        loading={loading}
+        refetch={refetch}
+        productId={productId || ""}
       />
     </>
   );

@@ -32,7 +32,7 @@ export const MUTATION_CREATE_RENT_ORDER = gql`
 `;
 
 export const MUTATION_CREATE_BUY_ORDER = gql`
-  mutation CreateBuyOrder($input: CreateSaleOrderInput!) {
+  mutation CreateBuyOrder($input: CreateBuyOrderInput!) {
     createBuyOrder(input: $input) {
       statusCode
       message
@@ -42,12 +42,10 @@ export const MUTATION_CREATE_BUY_ORDER = gql`
         status
         amount
         currency
-        productId
-        buyerId
-        createdAt
         product {
           id
           title
+          status
         }
         buyer {
           id
@@ -55,6 +53,7 @@ export const MUTATION_CREATE_BUY_ORDER = gql`
           lastName
           email
         }
+        createdAt
       }
     }
   }
