@@ -1,35 +1,34 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
-import { Product } from './entities/product.entity';
+import { ProductModel } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from 'src/common/guards/gql-auth.guard';
 
-@Resolver(() => Product)
+@Resolver(() => ProductModel)
 export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Mutation(() => Product)
-  createProduct(@Args('createProductInput') createProductInput: CreateProductInput) {
-    return this.productsService.create(createProductInput);
+  @Query(() => [ProductModel])
+  getAllProducts() {
+    return this.productsService.list();
   }
 
-  @Query(() => [Product], { name: 'products' })
-  findAll() {
-    return this.productsService.findAll();
+  @Query(() => ProductModel)
+  getProductById(@Args('id', { type: () => String }) id: string) {
+    return this.productsService.byId(id);
   }
 
-  @Query(() => Product, { name: 'product' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.findOne(id);
+  @Mutation(() => ProductModel)
+  @UseGuards(GqlAuthGuard)
+  createProduct(@Context() ctx: any, @Args('input') input: CreateProductInput) {
+    return this.productsService.create(ctx.userId, input);
   }
 
-  @Mutation(() => Product)
-  updateProduct(@Args('updateProductInput') updateProductInput: UpdateProductInput) {
-    return this.productsService.update(updateProductInput.id, updateProductInput);
-  }
-
-  @Mutation(() => Product)
-  removeProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.remove(id);
+  @Mutation(() => ProductModel)
+  @UseGuards(GqlAuthGuard)
+  updateProduct(@Context() ctx: any, @Args('input') input: UpdateProductInput) {
+    return this.productsService.update(ctx.userId, input);
   }
 }
