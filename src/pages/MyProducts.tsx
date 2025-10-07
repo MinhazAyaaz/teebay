@@ -1,20 +1,43 @@
 import { Button, Input, Pagination, ScrollArea } from "@mantine/core";
-import { MY_MOCK_PRODUCTS } from "../constants";
 import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProductCardLoader from "../components/ProductCardLoader";
+import type { Product, MyProductQuery, MyProductsVars } from "../types/product";
+import { useQuery } from "@apollo/client/react";
+import { QUERY_USER_PRODUCTS } from "../graphql/products/queries";
+import ProductNotFound from "../components/ProductNotFound";
 
 const MyProducts = () => {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [total, setTotal] = useState(0);
+  const pageSize = 10;
+
+  const { data, loading, refetch } = useQuery<MyProductQuery, MyProductsVars>(
+    QUERY_USER_PRODUCTS,
+    {
+      variables: { search: "", page: 1, pageSize },
+      fetchPolicy: "cache-and-network",
+      notifyOnNetworkStatusChange: true,
+    }
+  );
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+    if (data?.getUserProducts?.length && data.getUserProducts.length > 0) {
+      setProducts(data.getUserProducts || []);
+      setTotal(data.getUserProducts.length || 0);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      refetch({ search, page, pageSize });
+    }, 300);
+    return () => clearTimeout(id);
+  }, [search, page, pageSize, refetch]);
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-start gap-4 sm:gap-6 p-4 sm:p-6">
@@ -38,23 +61,30 @@ const MyProducts = () => {
           </Link>
         </div>
       </div>
-      <ScrollArea h={690} className="w-full max-w-6xl" scrollbars="y">
-        {loading ? (
+      <ScrollArea mah={690} className="w-full max-w-6xl" scrollbars="y">
+        {!loading && products.length === 0 && <ProductNotFound />}
+        {loading && products.length === 0 ? (
           <ProductCardLoader />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 sm:gap-6 px-2 sm:px-4">
-          {MY_MOCK_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} type="my-products" />
+            {products?.map((product: Product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                refetch={refetch}
+                type="my-products"
+              />
             ))}
           </div>
         )}
       </ScrollArea>
       <Pagination
         color="black"
-        total={10}
-        value={1}
+        total={Math.max(1, Math.ceil(total / pageSize))}
+        value={page}
         radius="md"
         className="w-full sm:w-auto"
+        onChange={setPage}
       />
     </div>
   );

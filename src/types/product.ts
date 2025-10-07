@@ -1,29 +1,93 @@
-type Product = {
-  id: number;
-  name: string;
+export type CreateProductFormInput = {
+  title: string;
   categories: string[];
   description: string;
-  rent: string;
-  interval: string; // e.g., "Hourly", "Daily", "Weekly", "Monthly", "Yearly"
-  price: number;
-  views: number;
+  rentPrice: number;
+  rentInterval: string;  
+  salePrice: number;
+};
+    
+export type UpdateProductFormInput = {
+  id?: string;
+  title?: string;
+  categories?: string[];
+  description?: string;
+  rentPrice?: number;
+  rentInterval?: string;  
+  salePrice?: number;
+};
+
+export type Product = {
+  id: string;
+  title: string;
+  categories: { category: string }[];
+  description: string;
+  rentPrice: number;
+  rentInterval: string;  
+  salePrice: number;
+  status: string;
+  currency: string;
+  ownerId: string;
   createdAt: string;
   updatedAt: string;
+  views: number;
 };
 
-type ProductQuery = {
-  products: {
-    items: Product[];
-    total: number;
-    page: number;
-    pageSize: number;
-  };
+export type MyProductQuery = {
+  getUserProducts: Product[];
 };
 
-type ProductsVars = {
+export type MyProductsVars = {
   search?: string;
   page?: number;
   pageSize?: number;
 };
 
-export type { Product, ProductQuery, ProductsVars };
+export type AllProductQuery = {
+  getAllProducts: Product[];
+};
+
+export type AllProductsVars = {
+  search?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+export type ProductQuery = {
+  getProductById: Product;
+};
+
+export type CreateProductMutation = {
+  createProduct: {
+    statusCode: number;
+    message: string;
+    product: Product;
+  };
+};
+
+export type CreateProductMutationVariables = {
+  input: CreateProductFormInput;
+};
+
+export type UpdateProductMutation = {
+  updateProduct: {
+    statusCode: number;
+    message: string;
+    product: Product;
+  };
+};
+
+export type UpdateProductMutationVariables = {
+  input: UpdateProductFormInput;
+};
+
+export type DeleteProductMutation = {
+  deleteProduct: { 
+    statusCode: number;
+    message: string;
+  };
+};
+
+export type DeleteProductMutationVariables = {
+  id: string;
+};

@@ -13,7 +13,8 @@ export const MUTATION_CREATE_PRODUCT = gql`
         categories {
           category
         }
-        rentPricePerDay
+        rentPrice
+        rentInterval
         salePrice
         status
         currency
@@ -36,12 +37,22 @@ export const MUTATION_UPDATE_PRODUCT = gql`
         categories {
           category
         }
-        rentPricePerDay
+        rentPrice
+        rentInterval
         salePrice
         status
         currency
         ownerId
       }
+    }
+  }
+`;
+
+export const MUTATION_DELETE_PRODUCT = gql`
+  mutation DeleteProduct($id: String!) {
+    deleteProduct(id: $id) {
+      statusCode
+      message
     }
   }
 `;

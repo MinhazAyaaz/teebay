@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const QUERY_PRODUCTS = gql`
+export const QUERY_ALL_PRODUCTS = gql`
   query GetAllProducts {
     getAllProducts {
       id
@@ -10,11 +10,34 @@ export const QUERY_PRODUCTS = gql`
       categories {
         category
       }
-      rentPricePerDay
+      rentPrice
+      rentInterval
       salePrice
       status
       currency
       ownerId
+      createdAt
+    }
+  }
+`;
+
+export const QUERY_USER_PRODUCTS = gql`
+  query GetUserProducts {
+    getUserProducts {
+      id
+      title
+      description
+      condition
+      categories {
+        category
+      }
+      rentPrice
+      rentInterval
+      salePrice
+      status
+      currency
+      ownerId
+      createdAt
     }
   }
 `;
@@ -29,11 +52,13 @@ export const QUERY_PRODUCT_BY_ID = gql`
       categories {
         category
       }
-      rentPricePerDay
-      salePrice
+      rentPrice
+      rentInterval
+      salePrice 
       status
       currency
       ownerId
+      createdAt
     }
   }
 `;
