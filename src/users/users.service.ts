@@ -1,22 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user-dto";
+import * as crypto from "crypto";
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.user.findMany();
+  private hash(pw: string) {
+    return crypto.createHash("sha256").update(pw).digest("hex");
   }
 
-  fineOnewithId(id: string) {
-    return this.prisma.user.findUnique({
-      where: { id },
-    });
-  }
-
-  async validateUser(email: string, password: string) {
+  async loginUser(email: string, password: string) {
     try {
       // Check if user exists
       const user = await this.prisma.user.findFirst({ where: { email } });
@@ -25,7 +20,7 @@ export class UsersService {
       }
 
       // Compare passwords
-      const isPasswordValid = password === user.password;
+      const isPasswordValid = user.password !== this.hash(password);
       if (!isPasswordValid) {
         throw new HttpException("Invalid credentials", HttpStatus.BAD_REQUEST); // 400
       }
@@ -49,7 +44,7 @@ export class UsersService {
     }
   }
 
-  async signUp(createUserInput: CreateUserDto) {
+  async createUser(createUserInput: CreateUserDto) {
     try {
       // Check if user exists
       const user = await this.prisma.user.findFirst({
@@ -64,7 +59,10 @@ export class UsersService {
 
       // Create new user
       const newUser = await this.prisma.user.create({
-        data: createUserInput,
+        data: {
+          ...createUserInput,
+          password: this.hash(createUserInput.password),
+        },
       });
 
       // Return new user
@@ -73,6 +71,105 @@ export class UsersService {
         message: "User created successfully",
         user: newUser,
       };
+    } catch (error) {
+      console.log(error);
+      // Rethrow specific errors for clarity
+      if (error instanceof HttpException) {
+        throw error; // Re-throw the HTTP exceptions to keep their status codes
+      } else {
+        throw new HttpException(
+          "Internal server error",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        ); // 500
+      }
+    }
+  }
+
+  async findUserById(userId: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          address: true,
+          phone: true,
+        },
+      });
+
+      if (!user) {
+        throw new HttpException("User not found", HttpStatus.NOT_FOUND); // 404
+      }
+
+      return user;
+    } catch (error) {
+      console.log(error);
+      // Rethrow specific errors for clarity
+      if (error instanceof HttpException) {
+        throw error; // Re-throw the HTTP exceptions to keep their status codes
+      } else {
+        throw new HttpException(
+          "Internal server error",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        ); // 500
+      }
+    }
+  }
+
+  async getUserByEmail(email: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          address: true,
+          phone: true,
+        },
+      });
+
+      if (!user) {
+        throw new HttpException("User not found", HttpStatus.NOT_FOUND); // 404
+      }
+
+      return user;
+    } catch (error) {
+      console.log(error);
+      // Rethrow specific errors for clarity
+      if (error instanceof HttpException) {
+        throw error; // Re-throw the HTTP exceptions to keep their status codes
+      } else {
+        throw new HttpException(
+          "Internal server error",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        ); // 500
+      }
+    }
+  }
+
+  async getCurrentUser(userId: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          address: true,
+          phone: true,
+        },
+      });
+
+      if (!user) {
+        throw new HttpException("User not found", HttpStatus.NOT_FOUND); // 404
+      }
+
+      return user;
     } catch (error) {
       console.log(error);
       // Rethrow specific errors for clarity

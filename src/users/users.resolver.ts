@@ -1,31 +1,44 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql'
-import { UsersService } from './users.service'
-import { User } from './entities/user.entity'
-import { CreateUserDto } from './dto/create-user-dto'
-import { ValidateUserDto } from './dto/validate-user-dto'
+import { Resolver, Args, Mutation, Query, Context } from "@nestjs/graphql";
+import { UsersService } from "./users.service";
+import { User } from "./entities/user.entity";
+import { CreateUserDto } from "./dto/create-user-dto";
+import { LoginUserDto } from "./dto/login-user-dto";
+import { UseGuards } from "@nestjs/common";
+import { GqlAuthGuard } from "src/common/guards/gql-auth.guard";
 
 @Resolver()
 export class UsersResolver {
-    constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-    @Query(() => [User])
-    users() {
-        return this.usersService.findAll()
-    }
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  getCurrentUser(@Context() ctx: any) {
+    return this.usersService.getCurrentUser(ctx.userId);
+  }
 
-    @Mutation(() => User)
-    createUser(@Args('createUserInput') createUserInput: CreateUserDto) {
-        return this.usersService.signUp(createUserInput)
-    }
+  @Query(() => User)
+  findUserById(@Args("userId") userId: string) {
+    return this.usersService.findUserById(userId);
+  }
 
-    @Mutation(() => User)
-    validateUser(
-        @Args('validateUserInput')
-        validateUserInput: ValidateUserDto
-    ) {
-        return this.usersService.validateUser(
-            validateUserInput.email,
-            validateUserInput.password
-        )
-    }
+  @Query(() => User)
+  findUserByEmail(@Args("email") email: string) {
+    return this.usersService.getUserByEmail(email);
+  }
+
+  @Mutation(() => User)
+  createUser(@Args("createUserInput") createUserInput: CreateUserDto) {
+    return this.usersService.createUser(createUserInput);
+  }
+
+  @Mutation(() => User)
+  loginUser(
+    @Args("loginUserInput")
+    loginUserInput: LoginUserDto
+  ) {
+    return this.usersService.loginUser(
+      loginUserInput.email,
+      loginUserInput.password
+    );
+  }
 }
