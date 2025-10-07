@@ -24,10 +24,12 @@ const AllProducts = () => {
     }
   );
 
+  console.log(data);
+
   useEffect(() => {
-    if (data && Array.isArray(data.getAllProducts)) {
-      setProductData(data.getAllProducts);
-      setTotal(data.getAllProducts.length);
+    if (data && Array.isArray(data.getAllProducts.products)) {
+      setProductData(data.getAllProducts.products);
+      setTotal(data.getAllProducts.totalCount);
     }
   }, [data]);
 
@@ -74,7 +76,7 @@ const AllProducts = () => {
       </ScrollArea>
       <Pagination
         color="black"
-        total={Math.max(1, Math.ceil(total / pageSize))}
+        total={Math.max(1, Math.ceil(total / pageSize))} 
         value={page}
         radius="md"
         onChange={setPage}
